@@ -9,6 +9,7 @@ python-dotenv = "*"
 psycopg2 = "*"
 django-money = "*"
 django-countries = "*"
+djangorestframework = "*"
 
 [dev-packages]
 

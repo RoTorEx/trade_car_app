@@ -4,7 +4,7 @@
 
 ### pipenv
 
-Подробнее о __pipenv__: <https://semakin.dev/2020/04/pipenv/>.
+Подробнее о __pipenv__ [тут][https://semakin.dev/2020/04/pipenv/].
 
 Настариваем виртуальное окружение проекта.
 
@@ -16,9 +16,9 @@
 
 ### Docker Compose & PostgreSQL
 
-Инструкция по разворачиванию Docker с Docker-compose с Postgres: <https://django.fun/tutorials/dokerizaciya-django-s-pomoshyu-postgres-gunicorn-i-nginx/>.
+Инструкция по разворачиванию Docker с Docker-compose с Postgres [здесь][https://django.fun/tutorials/dokerizaciya-django-s-pomoshyu-postgres-gunicorn-i-nginx/].
 
-Убить процесс занимающий порт: <https://ask-dev.ru/info/10471/find-and-kill-process-locking-port-3000-on-mac>.
+[Команды для работы процессами в портах][https://ask-dev.ru/info/10471/find-and-kill-process-locking-port-3000-on-mac].
 
 __? Как сохранять изменения в проекте между запусками докера ?__
 
@@ -30,14 +30,18 @@ __? Как сохранять изменения в проекте между з
 
 Остановить контейнер и удалить его: *docker-compose down -v*.
 
-## Настройка Django проекта
+## Django
+
+### Создание Django проекта
 
 Создадим новый проект: *django-admin startproject main_project .* - точка установит проект в данную папку, уберёт лишнюю вложенность из проекта.
 
 Запустим три приложения (Buyer, Dealership and Supplier) через *python manage.py startapp*
 
-### Настройка __settings.py__ в __main_project__
+### Регистрация приложений в __settings.py__ в __core__. Создание моделей и регистрация
 
-Регистрируем все приложения и все сторонние пакеты в __settings.py__. Привязываем пути к приложениям с адресами в __urls.py__.
+Регистрируем все приложения и все сторонние пакеты в __settings.py__, настраиваем переменные и базу данных. Привязываем пути к приложениям с адресами в __urls.py__.
 
-Для каждого приложения в проекте создаём модели таблиц.
+Для каждого приложения в проекте создаём модели таблиц, модели регистрируются в __admin.py__ приложения.
+
+## Django Rest Framework

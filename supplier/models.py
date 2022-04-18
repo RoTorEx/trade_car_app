@@ -10,12 +10,15 @@ class Supplier(models.Model):
     cars_price = models.ManyToManyField('car.CarPrice', related_name='supplier_car_price', verbose_name='Price')
     cars_chars = models.ManyToManyField('car.СarCharacters', related_name='supplier_car_chars', verbose_name='Chars')
 
-    is_active = models.BooleanField(default=True)
-    time_create = models.DateTimeField(auto_now_add=True)
-    time_update = models.DateTimeField(auto_now=True)
+    is_active = models.BooleanField(default=True, verbose_name='Active')
+    time_create = models.DateTimeField(auto_now_add=True, verbose_name='Time create')
+    time_update = models.DateTimeField(auto_now=True, verbose_name='Time update')
 
     def __str__(self):
         return f"{self.name}"
+
+    class Meta:
+        verbose_name_plural = "Suppliers"
 
 
 class SupplierHistory(models.Model):
@@ -24,6 +27,9 @@ class SupplierHistory(models.Model):
     sold_price = MoneyField(max_digits=10, decimal_places=2, default_currency='USD', verbose_name='Sold price')
     count = models.IntegerField(verbose_name='Count of supplied cars')
 
-    is_active = models.BooleanField(default=True)
-    time_create = models.DateTimeField(auto_now_add=True)
-    time_update = models.DateTimeField(auto_now=True)
+    is_active = models.BooleanField(default=True, verbose_name='Active')
+    time_create = models.DateTimeField(auto_now_add=True, verbose_name='Time create')
+    time_update = models.DateTimeField(auto_now=True, verbose_name='Time update')
+
+    class Meta:
+        verbose_name_plural = "Suppliers history"
