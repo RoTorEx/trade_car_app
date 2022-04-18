@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    'core.apps.CoreConfig',
     'buyer.apps.BuyerConfig',
     'car.apps.CarConfig',
     'dealership.apps.DealershipConfig',

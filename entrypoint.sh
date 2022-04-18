@@ -12,7 +12,7 @@ then
 fi
 
 # Очистка базы данных
-# python manage.py flush --no-input
+python manage.py flush --no-input
 # Запуск миграций
 python manage.py makemigrations
 python manage.py migrate

@@ -3,7 +3,7 @@ from .models import *
 
 
 # Кортеж моделей текущего приложения
-models = (Car, CarPrice, СarCharacters,)
+models = (Offer, Promotion)
 
 # Регистрация моделей
 for m in models:
