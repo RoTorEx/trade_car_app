@@ -1,0 +1,41 @@
+# Файл docker-compose начинается с тега версии.
+version: '3.8'
+
+# Перечисляем все используемые сервисы (web & db) с которыми мы можем консольно взаимодействовать
+services:
+
+  # Первый сервис – web-приложение
+  web:
+  # Путь к Dockerfile для создания образа, запускающий сервис
+    build: .
+    # Команда сработает по завершению образа
+    command: python manage.py runserver 0.0.0.0:8000
+    # Адрес сохранения данных
+    volumes:
+      - .:/usr/src/app/
+    # Порты вида компьютер:контейнер для взаимодейсвия
+    ports:
+      - 8000:8000
+    # Собираем виртуалку из текущей директории – .env
+    env_file:
+      - ./.env
+    # Зависимость запуска сервисов
+    depends_on:
+      # web-приложение будет ждать запуска db сервиса
+      - db
+  
+  # Второй сервис – база данных
+  db:
+    # Образ получаемые с dockerhub
+    image: postgres:13.0-alpine
+    # Адрес сохранения данных
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    # Переменные базы данных
+    environment:
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=1234
+      - POSTGRES_DB=trade_car_app_db
+
+volumes:
+  postgres_data:
