@@ -9,13 +9,13 @@ from .serializers import *
 
 
 class BuyerViewSet(viewsets.ModelViewSet):
-    '''Вью сет покупателя. ModelViewSet подразумевает доступными все API запросы.'''
+    '''Вьюсет покупателей. ModelViewSet подразумевает доступными все API запросы.'''
     queryset = Buyer.objects.all()
     serializer_class = BuyerSerializer
 
 
 class BuyerHistoryViewSet(viewsets.ReadOnlyModelViewSet):
-    '''Вью сет истории покуптелей. ReadOnlyModelViewSet разрешает только чтение данных.'''
+    '''Вьюсет истории покуптелей. ReadOnlyModelViewSet разрешает только чтение данных.'''
     queryset = BuyerHistory.objects.all()
     serializer_class = BuyerHistorySerializer
 

@@ -1,15 +1,18 @@
 from rest_framework import serializers
 from rest_framework.renderers import JSONRenderer
+
 from .models import *
 
 
 class BuyerSerializer(serializers.ModelSerializer):
+    '''Сериализатор покупателя.'''
     class Meta:
         model = Buyer
         fields = '__all__'
 
 
 class BuyerHistorySerializer(serializers.ModelSerializer):
+    '''Сериализатор истории покупателя.'''
     class Meta:
         model = BuyerHistory
         fields = '__all__'

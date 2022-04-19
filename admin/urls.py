@@ -18,15 +18,33 @@ from django.urls import include, path
 from rest_framework import routers
 
 from buyer.views import *
+from car.views import *
+from core.views import *
+from dealership.views import *
+from supplier.views import *
 
 
-# API адреса
+# API адреса приложений
 addresses = (
     (r'buyer', BuyerViewSet),
-    (r'buyer_history', BuyerHistoryViewSet),)
+    (r'buyer_history', BuyerHistoryViewSet),
+
+    (r'car', CarViewSet),
+    (r'car_price', CarPriceViewSet),
+    (r'car_characters', СarCharactersViewSet),
+
+    (r'offer', OfferViewSet),
+    (r'promotion', PromotionViewSet),
+
+    (r'dealership', DealershipViewSet),
+    (r'dealership_history', DealershipHistoryViewSet),
+
+    (r'supplier', SupplierViewSet),
+    (r'supplier_history', SupplierHistoryViewSet),
+)
 
 router = routers.SimpleRouter()
-# Регистрации всех маршрутов
+# Регистрации API маршрутов
 for addr in addresses:
     router.register(addr[0], addr[1])
 
@@ -34,9 +52,4 @@ for addr in addresses:
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include(router.urls))
-
-    # path('api/buyer_list/', BuyerViewSet.as_view({'get': 'list'})),
-    # path('api/buyer_list/<int:pk>/', BuyerViewSet.as_view({'put': 'update'})),
-
-    # path('api/buyers_list', BuyerAPIView.as_view())
 ]
