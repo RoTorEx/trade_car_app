@@ -1,15 +1,12 @@
 from django.db import models
 from djmoney.models.fields import MoneyField
+from core.models import CommonAbstractModel
 
 
-class Car(models.Model):
+class Car(CommonAbstractModel):
     '''Марки и модели автомобилей.'''
     car_brand = models.CharField(max_length=255, verbose_name='Car brand')
     car_model = models.CharField(max_length=255, verbose_name='Car model')
-
-    is_active = models.BooleanField(default=True, verbose_name='Active')
-    time_create = models.DateTimeField(auto_now_add=True, verbose_name='Time create')
-    time_update = models.DateTimeField(auto_now=True, verbose_name='Time update')
 
     def __str__(self):
         return f"{self.car_brand} {self.car_model}"
