@@ -3,3 +3,7 @@
 **/migrations/
 
 **.DS_Store
+
+/common
+
+.dockerignore

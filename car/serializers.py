@@ -16,8 +16,8 @@ class CarPriceSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class СarCharactersSerializer(serializers.ModelSerializer):
+class CarCharactersSerializer(serializers.ModelSerializer):
     '''Сериализатор характеристик авто.'''
     class Meta:
-        model = СarCharacters
+        model = CarCharacters
         fields = '__all__'

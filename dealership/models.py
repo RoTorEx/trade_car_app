@@ -10,7 +10,7 @@ class Dealership(models.Model):
     balance = MoneyField(max_digits=10, decimal_places=2, default_currency='USD', verbose_name='Balance')
     cars = models.ManyToManyField('car.Car', related_name='dealership_car', verbose_name='Dealership cars')
     cars_price = models.ManyToManyField('car.CarPrice', related_name='dealership_car_price', verbose_name='Price')
-    cars_chars = models.ManyToManyField('car.СarCharacters', related_name='dealer_car_chars', verbose_name='Chars')
+    cars_chars = models.ManyToManyField('car.CarCharacters', related_name='dealer_car_chars', verbose_name='Chars')
     buyers = models.ManyToManyField('buyer.Buyer', related_name='dealership_buyers', verbose_name='Unique buyers')
 
     is_active = models.BooleanField(default=True, verbose_name='Active')

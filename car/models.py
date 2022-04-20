@@ -27,7 +27,7 @@ class CarPrice(models.Model):
         verbose_name_plural = "Cars price"
 
 
-class СarCharacters(models.Model):
+class CarCharacters(models.Model):
     '''Характеристики автомобилей.'''
     car = models.OneToOneField('Car', on_delete=models.CASCADE)
     engine_type = models.CharField(max_length=255, verbose_name='Engine type')

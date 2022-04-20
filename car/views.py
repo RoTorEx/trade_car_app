@@ -17,7 +17,7 @@ class CarPriceViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = CarPriceSerializer
 
 
-class СarCharactersViewSet(viewsets.ReadOnlyModelViewSet):
+class CarCharactersViewSet(viewsets.ReadOnlyModelViewSet):
     '''Вьюсет для характеристик машин.'''
-    queryset = СarCharacters.objects.all()
-    serializer_class = СarCharactersSerializer
+    queryset = CarCharacters.objects.all()
+    serializer_class = CarCharactersSerializer

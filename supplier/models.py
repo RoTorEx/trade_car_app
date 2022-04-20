@@ -8,7 +8,7 @@ class Supplier(models.Model):
     year_of_foundation = models.DateField(verbose_name='Year of foundation')
     cars = models.ManyToManyField('car.Car', related_name='supplier_car', verbose_name='Supplier cars')
     cars_price = models.ManyToManyField('car.CarPrice', related_name='supplier_car_price', verbose_name='Price')
-    cars_chars = models.ManyToManyField('car.СarCharacters', related_name='supplier_car_chars', verbose_name='Chars')
+    cars_chars = models.ManyToManyField('car.CarCharacters', related_name='supplier_car_chars', verbose_name='Chars')
 
     is_active = models.BooleanField(default=True, verbose_name='Active')
     time_create = models.DateTimeField(auto_now_add=True, verbose_name='Time create')

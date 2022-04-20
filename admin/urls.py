@@ -1,5 +1,5 @@
-"""admin URL Configuration
-
+"""
+admin URL Configuration
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/4.0/topics/http/urls/
 Examples:
@@ -13,6 +13,7 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+
 from django.contrib import admin
 from django.urls import include, path
 from rest_framework import routers
@@ -31,7 +32,7 @@ addresses = (
 
     (r'car', CarViewSet),
     (r'car_price', CarPriceViewSet),
-    (r'car_characters', СarCharactersViewSet),
+    (r'car_characters', CarCharactersViewSet),
 
     (r'offer', OfferViewSet),
     (r'promotion', PromotionViewSet),
@@ -43,11 +44,10 @@ addresses = (
     (r'supplier_history', SupplierHistoryViewSet),
 )
 
-router = routers.SimpleRouter()
+router = routers.DefaultRouter()
 # Регистрации API маршрутов
 for addr in addresses:
     router.register(addr[0], addr[1])
-
 
 urlpatterns = [
     path('admin/', admin.site.urls),

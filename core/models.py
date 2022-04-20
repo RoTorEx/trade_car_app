@@ -3,7 +3,7 @@ from djmoney.models.fields import MoneyField
 
 
 class Offer(models.Model):
-    '''Оффер на покупку автомобиля у автосалона.'''
+    '''Оффер на покупку автомобиля автосалона.'''
     buyer = models.ForeignKey('buyer.Buyer', on_delete=models.CASCADE, related_name='offer', verbose_name='Buyer')
     max_price = MoneyField(max_digits=9, decimal_places=2, null=True, default_currency='USD', verbose_name='Max price')
     car = models.ForeignKey('car.Car', on_delete=models.CASCADE, related_name='car_offer', verbose_name='Preffer car')
@@ -20,7 +20,7 @@ class Offer(models.Model):
 
 
 class Promotion(models.Model):
-    '''Акции в автосалонах и у поставщиков действующие на автомобили.'''
+    '''Акции в автосалонах и поставщиков действующие на автомобили.'''
     car = models.ManyToManyField('car.Car', related_name='car_promo', verbose_name='Promo car')
     discount = models.DecimalField(max_digits=4, decimal_places=1, verbose_name='Discount')
     description = models.TextField(blank=True, verbose_name='Discount description')
