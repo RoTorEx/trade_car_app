@@ -49,6 +49,7 @@ INSTALLED_APPS = [
 
     'djmoney',
     'django_countries',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [

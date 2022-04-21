@@ -10,6 +10,7 @@ psycopg2 = "*"
 django-money = "*"
 django-countries = "*"
 djangorestframework = "*"
+faker = "*"
 
 [dev-packages]
 
