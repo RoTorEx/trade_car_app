@@ -1,23 +1,23 @@
 from django.shortcuts import render
 from rest_framework import viewsets
 
-from .models import *
-from .serializers import *
+from car.models import Car, CarPrice, CarCharacters
+from car.serializers import CarSerializer, CarPriceSerializer, CarCharactersSerializer
 
 
 class CarViewSet(viewsets.ReadOnlyModelViewSet):
-    '''Вьюсет для моделей машин.'''
+    '''Viewset for car models.'''
     queryset = Car.objects.all()
     serializer_class = CarSerializer
 
 
 class CarPriceViewSet(viewsets.ReadOnlyModelViewSet):
-    '''Вьюсет для моделей машин.'''
+    '''Viewset for car prices.'''
     queryset = CarPrice.objects.all()
     serializer_class = CarPriceSerializer
 
 
 class CarCharactersViewSet(viewsets.ReadOnlyModelViewSet):
-    '''Вьюсет для характеристик машин.'''
+    '''Viewset for machine characteristics.'''
     queryset = CarCharacters.objects.all()
     serializer_class = CarCharactersSerializer

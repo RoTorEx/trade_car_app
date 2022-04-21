@@ -1,17 +1,17 @@
 from django.shortcuts import render
 from rest_framework import viewsets
 
-from .models import *
-from .serializers import *
+from dealership.models import Dealership, DealershipHistory
+from dealership.serializers import DealershipSerializer, DealershipHistorySerializer
 
 
 class DealershipViewSet(viewsets.ModelViewSet):
-    '''Вьюсет автосалонов.'''
+    '''Viewset of car dealerships.'''
     queryset = Dealership.objects.all()
     serializer_class = DealershipSerializer
 
 
 class DealershipHistoryViewSet(viewsets.ModelViewSet):
-    '''Вьюсет истории автосалонов.'''
+    '''Viewset of the history of car dealerships.'''
     queryset = DealershipHistory.objects.all()
     serializer_class = DealershipHistorySerializer

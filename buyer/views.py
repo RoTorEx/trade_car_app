@@ -4,18 +4,18 @@ from rest_framework import generics, viewsets
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
-from .models import *
-from .serializers import *
+from buyer.models import Buyer, BuyerHistory
+from buyer.serializers import BuyerSerializer, BuyerHistorySerializer
 
 
 class BuyerViewSet(viewsets.ModelViewSet):
-    '''Вьюсет покупателей. ModelViewSet подразумевает доступными все API запросы.'''
+    '''Viewset of buyers. ModelViewSet means all API requests are available.'''
     queryset = Buyer.objects.all()
     serializer_class = BuyerSerializer
 
 
 class BuyerHistoryViewSet(viewsets.ReadOnlyModelViewSet):
-    '''Вьюсет истории покуптелей. ReadOnlyModelViewSet разрешает только чтение данных.'''
+    '''Viewset of customer history. ReadOnlyModelViewSet only allows data to be read.'''
     queryset = BuyerHistory.objects.all()
     serializer_class = BuyerHistorySerializer
 

@@ -18,36 +18,37 @@ from django.contrib import admin
 from django.urls import include, path
 from rest_framework import routers
 
-from buyer.views import *
-from car.views import *
-from core.views import *
-from dealership.views import *
-from supplier.views import *
+from buyer.views import BuyerViewSet, BuyerHistoryViewSet
+from car.views import CarViewSet, CarPriceViewSet, CarCharactersViewSet
+from core.views import OfferViewSet, PromotionViewSet
+from dealership.views import DealershipViewSet, DealershipHistoryViewSet
+from supplier.views import SupplierViewSet, SupplierHistoryViewSet
 
 
-# API адреса приложений
+# Application APIs
 addresses = (
-    (r'buyer', BuyerViewSet),
-    (r'buyer_history', BuyerHistoryViewSet),
+    (r'buyer', BuyerViewSet, 'buyer'),
+    (r'buyer_history', BuyerHistoryViewSet, 'buyer_history'),
 
-    (r'car', CarViewSet),
-    (r'car_price', CarPriceViewSet),
-    (r'car_characters', CarCharactersViewSet),
+    (r'car', CarViewSet, 'car'),
+    (r'car_price', CarPriceViewSet, 'car_price'),
+    (r'car_characters', CarCharactersViewSet, 'car_characters'),
 
-    (r'offer', OfferViewSet),
-    (r'promotion', PromotionViewSet),
+    (r'offer', OfferViewSet, 'offer'),
+    (r'promotion', PromotionViewSet, 'promotion'),
 
-    (r'dealership', DealershipViewSet),
-    (r'dealership_history', DealershipHistoryViewSet),
+    (r'dealership', DealershipViewSet, 'dealership'),
+    (r'dealership_history', DealershipHistoryViewSet, 'dealership_history'),
 
-    (r'supplier', SupplierViewSet),
-    (r'supplier_history', SupplierHistoryViewSet),
+    (r'supplier', SupplierViewSet, 'supplier'),
+    (r'supplier_history', SupplierHistoryViewSet, 'supplier_history'),
 )
 
-router = routers.DefaultRouter()
-# Регистрации API маршрутов
+# Route API registrations
+router = routers.DefaultRouter()  # List of routers at http://.../api
 for addr in addresses:
-    router.register(addr[0], addr[1])
+    router.register(addr[0], addr[1], basename=addr[2])
+    print(router.urls, end='\n\n\n')
 
 urlpatterns = [
     path('admin/', admin.site.urls),

@@ -1,17 +1,17 @@
 from rest_framework import serializers
 
-from .models import *
+from supplier.models import Supplier, SupplierHistory
 
 
 class SupplierSerializer(serializers.ModelSerializer):
-    '''Сериализатор поставщиков.'''
+    '''Supplier serializer.'''
     class Meta:
         model = Supplier
         fields = '__all__'
 
 
 class SupplierHistorySerializer(serializers.ModelSerializer):
-    '''Сериализатор истории поставщиков.'''
+    '''Delivery history serializer.'''
     class Meta:
         model = SupplierHistory
         fields = '__all__'
