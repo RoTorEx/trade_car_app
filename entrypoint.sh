@@ -11,9 +11,9 @@ then
     echo "PostgreSQL started!"
 fi
 
-# Очистка базы данных
+# Flush DB
 python manage.py flush --no-input
-# Запуск миграций
+# Start migrations
 python manage.py makemigrations
 python manage.py migrate
 

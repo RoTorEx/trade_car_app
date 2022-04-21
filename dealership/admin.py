@@ -1,10 +1,10 @@
 from django.contrib import admin
-from .models import *
+from dealership.models import Dealership, DealershipHistory
 
 
-# Кортеж моделей текущего приложения
+# Tuple of current application models
 models = (Dealership, DealershipHistory,)
 
-# Регистрация моделей
+# Registration of models
 for m in models:
     admin.site.register(m)

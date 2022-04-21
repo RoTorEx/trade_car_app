@@ -7,7 +7,7 @@ import dotenv
 
 def main():
     """Run administrative tasks."""
-    dotenv.load_dotenv()  # Метод dotenv подгружает переменные из окружения .env при запуске через pipenv shell
+    dotenv.load_dotenv()  # The dotenv method loads variables from the .env environment when run using "pipenv shell"
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'admin.settings')
     try:
         from django.core.management import execute_from_command_line

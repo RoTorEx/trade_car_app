@@ -1,37 +1,37 @@
-# Файл для сборки образа приложения
+# File for building the application image
 
-# Получаем образ Python
+# Get the Python image
 FROM python:3.10-alpine
 
-# Устанавливаем рабочую директорию образа
+# Set the working directory of the image
 WORKDIR /usr/src/app
 
-# Настройка окружения
+# Setting up the environment
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 
-# установка psycopg2 и зависимостей
+# Install psycopg2 and dependencies
 RUN apk update \
     && apk add postgresql-dev gcc python3-dev musl-dev
 
-# Копирование файлов pipenv 
+# Copy pipenv files
 COPY Pipfile ./
 COPY Pipfile.lock ./
 
-# Уставнока pipenv и зависимостей приложения
+# Set up pipenv and application dependencies
 RUN pip install pipenv
 RUN set -ex && pipenv install --deploy --system
 
-# Копирование и настрйока скрипта entrypoint.sh
+# Copy and configure the entrypoint.sh script
 COPY ./entrypoint.sh .
 RUN sed -i 's/\r$//g' /usr/src/app/entrypoint.sh
 RUN chmod +x /usr/src/app/entrypoint.sh
 
-# Копирование проекта
+# Copy project
 COPY . .
 
-# Команда запуска проекта при развёртывании через Docker
+# Command to start the project when deployed via Docker
 # CMD ["python", "manage.py", "runserver"]
 
-# Запуск скрипта entrypoint.sh
+# Run entrypoint.sh script
 ENTRYPOINT ["/usr/src/app/entrypoint.sh"]

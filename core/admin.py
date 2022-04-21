@@ -1,10 +1,10 @@
 from django.contrib import admin
-from .models import *
+from core.models import Offer, Promotion
 
 
-# Кортеж моделей текущего приложения
-models = (Offer, Promotion)
+# Tuple of current application models
+models = (Offer, Promotion,)
 
-# Регистрация моделей
+# Registration of models
 for m in models:
     admin.site.register(m)
