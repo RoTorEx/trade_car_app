@@ -7,11 +7,11 @@
 
 #     class Meta(UserCreationForm):
 #         model = UserProfile
-#         fields = ('username', 'email')
+#         fields = ('username', 'email', 'role')
 
 
 # class UserProfileChangeForm(UserChangeForm):
 
 #     class Meta:
 #         model = UserProfile
-#         fields = ('username', 'email')
+#         fields = ('username', 'email', 'role')

@@ -2,7 +2,7 @@
 
 ## Git commits
 
-Общепринятые информативные коммиты [тут](https://habr.com/ru/post/183646/), [вот тут](https://habr.com/ru/company/otus/blog/537196/) и [здесь](https://drbrain.ru/articles/git-commit-message/).
+Общепринятые информативные коммиты [тут](https://habr.com/ru/post/183646/), [вот тут](https://habr.com/ru/company/otus/blog/537196/) и [здесь](https://drbrain.ru/articles/git-commit-message/), [и вот](https://simpleisbetterthancomplex.com/tutorial/2016/07/22/how-to-extend-django-user-model.html#abstractuser).
 
 ## Настройка окружения
 
@@ -84,5 +84,16 @@
 
 Использование [djoser и jwt](https://django.fun/tutorials/registraciya-i-avtorizaciya-polzovatelej-v-django-s-pomoshyu-djoser-i-veb-tokenov-json/). Переопределение объекта user [тут](https://django.fun/tips/polzovatelskaya-model-user/) и [тут](https://tproger.ru/translations/extending-django-user-model/#var3).
 
-Регистрация с [подтверждением](https://www.youtube.com/watch?v=PC0S1dkRNtg&ab_channel=DjangoSchool) почты пользователя
+Регистрация с [подтверждением](https://www.youtube.com/watch?v=PC0S1dkRNtg&ab_channel=DjangoSchool) почты пользователя.
 
+### Аутентификация с помощью JWT через API адреса
+
+В __settings.py__ устанавливаем Djoser, Simple_JWT и переменные в REST_FRAMEWORK.
+
+Используем POSTMAN для отправки запросов на сервер.
+
+http://0.0.0.0:8000/api/token/ – передаём POST запросом (Body - form-data) следующие поля: __username__ & __password__. Они нужны для логина зарегистрированного пользователя на сайте. Получаем __access__ и __refresh__ token'ы ответом.
+
+http://0.0.0.0:8000/api/buyer/ - GET запросом в Header'е передаём определяем ещё один параметр __Authorization__, а в значении тип токена (заголовок) __JWT__ и сам __access токен__. Отправляя запрос сервер видит токен и понимает, что получен от авторизованного пользователя, разрешая просмотр запрошенного ресурса, или нет.
+
+http://0.0.0.0:8000/api/token/refresh/ - по истечению жизни __access токена__ передаём POST запросом (Body - form-data) поле __refresh__ c __refresh токеном__ на сервер, чтобы получить новый __access токен__.

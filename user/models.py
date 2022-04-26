@@ -17,6 +17,8 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
 
     Username and password are required. Other fields are optional.
     """
+    ROLE = (('B', 'Buyer'), ('D', 'Dealership'), ('S', 'Supplier'))
+
     username_validator = UnicodeUsernameValidator()
 
     username = models.CharField(
@@ -40,24 +42,6 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
         help_text=_("Designates whether the user can log into this admin site."),
     )
 
-    is_buyer = models.BooleanField(
-        _("buyer status"),
-        default=False,
-        help_text=_("Indicates whether the user is a car buyer."),
-    )
-
-    is_dealership = models.BooleanField(
-        _("dealership status"),
-        default=False,
-        help_text=_("Indicates if the user is a car dealer."),
-    )
-
-    is_supplier = models.BooleanField(
-        _("supplier status"),
-        default=False,
-        help_text=_("Indicates if the user is an auto supplier."),
-    )
-
     is_active = models.BooleanField(
         _("active"),
         default=True,
@@ -66,6 +50,8 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
             "Unselect this instead of deleting accounts."
         ),
     )
+
+    role = models.CharField(max_length=15, choices=ROLE, blank=True)
 
     objects = UserManager()
 

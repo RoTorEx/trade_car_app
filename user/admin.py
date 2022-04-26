@@ -3,7 +3,7 @@ from django.contrib.auth.admin import UserAdmin
 from user.models import UserProfile
 # from user.forms import UserProfileCreationForm, UserProfileChangeForm
 
-# # Register Users
+# Register Users
 admin.site.register(UserProfile)
 
 
@@ -15,7 +15,7 @@ admin.site.register(UserProfile)
 #     add_form = UserProfileCreationForm
 #     form = UserProfileChangeForm
 #     model = UserProfile
-#     list_display = ['email', 'username', ]
+#     list_display = ['email', 'username', 'role']
 
 
 # admin.site.register(UserProfile, UserProfileAdmin)
