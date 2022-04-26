@@ -1,6 +1,6 @@
 **.DS_Store
 **/__pycache__
 **/migrations/
+**/management
 
-/data
-/common
+/db_data

@@ -11,6 +11,8 @@ django-money = "*"
 django-countries = "*"
 djangorestframework = "*"
 faker = "*"
+djangorestframework-simplejwt = "*"
+djoser = "==2.0.5"
 
 [dev-packages]
 

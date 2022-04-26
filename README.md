@@ -1,5 +1,9 @@
 # Instruction to Trade cars application
 
+## Git commits
+
+Общепринятые информативные коммиты [тут](https://habr.com/ru/post/183646/), [вот тут](https://habr.com/ru/company/otus/blog/537196/) и [здесь](https://drbrain.ru/articles/git-commit-message/).
+
 ## Настройка окружения
 
 ### pipenv
@@ -64,4 +68,21 @@
 
 В __admin.py__ -> __urls.py__ указываем маршрут получения API. Прописанные [роутеры](https://www.django-rest-framework.org/api-guide/routers/) позволяют обращаться по адресу (<http://0.0.0.0:8000/api/buyer/>) работать GET и POST запросами. И при добавлении идентификатора записи к адресу (/<int:pk>/) для PUT, PUTCH, DELETE запросов. __Routers.register__ 3им аргументом может принимать __base_name__, который явлется обязательным при отсутвсвии во вьюсете __queryset__, по которому проиходит подстановка.
 
-## Скрипт для заполнения таблиц базы данных
+## Скрипт для случайного заполнения таблиц базы данных
+
+Скрипт для заполнения таблиц базы данных реализуется через обязательное добавление директорий в приложение, в данном случае __core__, __management/commands__. 
+
+В скрипте прописываем класс __Command__, который наследуется от __BaseCommand__. В нём переопределяем метод __handle__, где и прописываем необходимый для исполнения по команду код.
+
+Код исполняется внутри контейнера, и запускается: *docker-compose exec web python manage.py fill_db*.
+
+## Авторизация пользователей
+
+*Осуществлять следующим образом: переопределить объект user одни из трёх классов, предпочтителен abstract base. Использовать Permission mixins.*
+
+Устанавливаем модуль __djangorestframework-simplejwt__ в проект и добавляем словарь __REST_FRAMEWORK__ значения для авторизации.
+
+Использование [djoser и jwt](https://django.fun/tutorials/registraciya-i-avtorizaciya-polzovatelej-v-django-s-pomoshyu-djoser-i-veb-tokenov-json/). Переопределение объекта user [тут](https://django.fun/tips/polzovatelskaya-model-user/) и [тут](https://tproger.ru/translations/extending-django-user-model/#var3).
+
+Регистрация с [подтверждением](https://www.youtube.com/watch?v=PC0S1dkRNtg&ab_channel=DjangoSchool) почты пользователя
+

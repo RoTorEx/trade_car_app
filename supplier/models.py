@@ -1,6 +1,7 @@
 from django.db import models
 from djmoney.models.fields import MoneyField
 from core.models import CommonAbstractModel
+from user.models import UserProfile
 
 
 class Supplier(CommonAbstractModel):
@@ -10,6 +11,7 @@ class Supplier(CommonAbstractModel):
     cars = models.ManyToManyField('car.Car', related_name='supplier_car', verbose_name='Supplier cars')
     cars_price = models.ManyToManyField('car.CarPrice', related_name='supplier_car_price', verbose_name='Price')
     cars_chars = models.ManyToManyField('car.CarCharacters', related_name='supplier_car_chars', verbose_name='Chars')
+    user = models.OneToOneField(UserProfile, on_delete=models.CASCADE, related_name='supplier_profile')
 
     def __str__(self):
         return f"{self.name}"

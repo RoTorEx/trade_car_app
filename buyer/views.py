@@ -3,6 +3,7 @@ from django.forms import model_to_dict
 from rest_framework import generics, viewsets
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAdminUser, IsAuthenticated
 
 from buyer.models import Buyer, BuyerHistory
 from buyer.serializers import BuyerSerializer, BuyerHistorySerializer
@@ -12,6 +13,7 @@ class BuyerViewSet(viewsets.ModelViewSet):
     '''Viewset of buyers. ModelViewSet means all API requests are available.'''
     queryset = Buyer.objects.all()
     serializer_class = BuyerSerializer
+    permission_classes = (IsAuthenticated, )
 
 
 class BuyerHistoryViewSet(viewsets.ReadOnlyModelViewSet):

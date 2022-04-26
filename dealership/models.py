@@ -2,6 +2,7 @@ from django.db import models
 from django_countries.fields import CountryField
 from djmoney.models.fields import MoneyField
 from core.models import CommonAbstractModel
+from user.models import UserProfile
 
 
 class Dealership(CommonAbstractModel):
@@ -13,6 +14,7 @@ class Dealership(CommonAbstractModel):
     cars_price = models.ManyToManyField('car.CarPrice', related_name='dealership_car_price', verbose_name='Price')
     cars_chars = models.ManyToManyField('car.CarCharacters', related_name='dealer_car_chars', verbose_name='Chars')
     buyers = models.ManyToManyField('buyer.Buyer', related_name='dealership_buyers', verbose_name='Unique buyers')
+    user = models.OneToOneField(UserProfile, on_delete=models.CASCADE, related_name='dealership_profile')
 
     def __str__(self):
         return f"{self.name} - {self.location}"

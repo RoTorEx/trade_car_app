@@ -1,6 +1,7 @@
 from django.db import models
 from djmoney.models.fields import MoneyField
 from core.models import CommonAbstractModel
+from user.models import UserProfile
 
 
 class Buyer(CommonAbstractModel):
@@ -9,6 +10,7 @@ class Buyer(CommonAbstractModel):
     last_name = models.CharField(max_length=255, verbose_name='Last name')
     email_address = models.CharField(max_length=255, verbose_name='Email address')
     balance = MoneyField(max_digits=10, decimal_places=2, default_currency='USD')
+    user = models.OneToOneField(UserProfile, on_delete=models.CASCADE, related_name='buyer_profile')
 
     def __str__(self):
         return f"{self.first_name} {self.last_name}"

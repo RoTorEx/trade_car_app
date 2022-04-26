@@ -15,8 +15,9 @@ Including another URLconf
 """
 
 from django.contrib import admin
-from django.urls import include, path
+from django.urls import include, path, re_path
 from rest_framework import routers
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView, TokenVerifyView
 
 from buyer.views import BuyerViewSet, BuyerHistoryViewSet
 from car.views import CarViewSet, CarPriceViewSet, CarCharactersViewSet
@@ -48,9 +49,27 @@ addresses = (
 router = routers.DefaultRouter()  # List of routers at http://.../api
 for addr in addresses:
     router.register(addr[0], addr[1], basename=addr[2])
-    print(router.urls, end='\n\n\n')
+    # print(router.urls)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/', include(router.urls))
+    path('api/', include(router.urls)),
+
+    # Session-based authentication
+    path('api/auth/', include('rest_framework.urls')),  # /login & /logout
+
+    path('api/auth/', include('djoser.urls')),
+    path('api/auth/', include('djoser.urls.authtoken')),
+    path('api/auth/', include('djoser.urls.jwt')),
+
+    # path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    # path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    # path('api/token/verify/', TokenVerifyView.as_view(), name='token_verify'),
+
+    # # path to djoser end points
+    # path('auth/', include('djoser.urls')),
+    # path('auth/', include('djoser.urls.jwt')),
+
+    # # path to our account's app endpoints
+    # path("api/accounts/", include("accounts.urls"))
 ]
