@@ -1,21 +1,26 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
+from django.utils.translation import gettext_lazy as _
+
 from user.models import UserProfile
-# from user.forms import UserProfileCreationForm, UserProfileChangeForm
-
-# Register Users
-admin.site.register(UserProfile)
+from user.forms import UserProfileCreationForm, UserProfileChangeForm
 
 
-# from django.contrib.auth import get_user_model
-# from django.contrib.auth.admin import UserAdmin
+class UserProfileAdmin(UserAdmin):
+    add_form = UserProfileCreationForm
+    form = UserProfileChangeForm
+    model = UserProfile
+    list_display = ['username', 'email', 'verifyed_email', 'role']
+
+    fieldsets = (
+        (_('User info'), {'fields': ('username', 'email', 'verifyed_email', 'password', 'role')}),
+    )
+
+    # add_fieldsets = (
+    #     (None, {
+    #         'classes': ('wide',),
+    #         'fields': ('username', 'email', 'password', 'role')}),
+    # )
 
 
-# class UserProfileAdmin(UserAdmin):
-#     add_form = UserProfileCreationForm
-#     form = UserProfileChangeForm
-#     model = UserProfile
-#     list_display = ['email', 'username', 'role']
-
-
-# admin.site.register(UserProfile, UserProfileAdmin)
+admin.site.register(UserProfile, UserProfileAdmin)

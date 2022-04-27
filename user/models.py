@@ -1,12 +1,8 @@
-from django.apps import apps
 from django.db import models
 from django.core.mail import send_mail
-from django.contrib import auth
-from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import PermissionsMixin, UserManager  # , User
 from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
 from django.contrib.auth.validators import UnicodeUsernameValidator
-from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
 
@@ -17,10 +13,16 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
 
     Username and password are required. Other fields are optional.
     """
-    ROLE = (('B', 'Buyer'), ('D', 'Dealership'), ('S', 'Supplier'))
+    ROLE = (
+        ('staff', 'Staff'),
+        ('buyer', 'Buyer'),
+        ('dealership', 'Dealership'),
+        ('supplier', 'Supplier'),
+        ('unknown', 'Unknown'))
 
     username_validator = UnicodeUsernameValidator()
 
+    # Model fields
     username = models.CharField(
         _("username"),
         max_length=150,
@@ -34,7 +36,20 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
         },
     )
 
-    email = models.EmailField(_("email address"), blank=True)
+    # role = models.CharField(max_length=15, choices=ROLE)
+    role = models.CharField(max_length=15, choices=ROLE, blank=True)
+
+    email = models.EmailField(_("email address"), blank=False)
+
+    verifyed_email = models.BooleanField(default=False)
+
+    # first_name = None
+    # last_name = None
+    # date_joined = None
+
+    # first_name = models.CharField(_("first name"), max_length=150, blank=True)
+    # last_name = models.CharField(_("last name"), max_length=150, blank=True)
+    # date_joined = models.DateTimeField(_("date joined"), default=timezone.now)
 
     is_staff = models.BooleanField(
         _("staff status"),
@@ -51,13 +66,12 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
         ),
     )
 
-    role = models.CharField(max_length=15, choices=ROLE, blank=True)
-
+    # Other
     objects = UserManager()
 
     EMAIL_FIELD = "email"
     USERNAME_FIELD = "username"
-    REQUIRED_FIELDS = ["email"]
+    REQUIRED_FIELDS = ["email", "role"]
 
     class Meta:
         verbose_name = _("user")
