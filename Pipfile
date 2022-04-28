@@ -11,6 +11,7 @@ django-money = "*"
 django-countries = "*"
 djangorestframework = "*"
 faker = "*"
+django-debug-toolbar = "*"
 
 [dev-packages]
 

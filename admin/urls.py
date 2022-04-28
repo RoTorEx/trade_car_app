@@ -15,12 +15,13 @@ Including another URLconf
 """
 
 from django.contrib import admin
+from django.conf import settings
 from django.urls import include, path
 from rest_framework import routers
 
 from buyer.views import BuyerViewSet, BuyerHistoryViewSet
 from car.views import CarViewSet, CarPriceViewSet, CarCharactersViewSet
-from core.views import OfferViewSet, PromotionViewSet
+from core.views import OfferViewSet, PromotionViewSet, index
 from dealership.views import DealershipViewSet, DealershipHistoryViewSet
 from supplier.views import SupplierViewSet, SupplierHistoryViewSet
 
@@ -48,9 +49,18 @@ addresses = (
 router = routers.DefaultRouter()  # List of routers at http://.../api
 for addr in addresses:
     router.register(addr[0], addr[1], basename=addr[2])
-    print(router.urls, end='\n\n\n')
+    # print(router.urls, end='\n\n\n')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/', include(router.urls))
+    path('api/', include(router.urls)),
+    path('', include('core.urls')),
 ]
+
+# Debug toolbar
+if bool(settings.DEBUG):
+    import debug_toolbar
+
+    urlpatterns = [
+        path('__debug__/', include(debug_toolbar.urls))
+    ] + urlpatterns

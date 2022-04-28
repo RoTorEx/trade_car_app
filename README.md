@@ -65,3 +65,15 @@
 В __admin.py__ -> __urls.py__ указываем маршрут получения API. Прописанные [роутеры](https://www.django-rest-framework.org/api-guide/routers/) позволяют обращаться по адресу (<http://0.0.0.0:8000/api/buyer/>) работать GET и POST запросами. И при добавлении идентификатора записи к адресу (/<int:pk>/) для PUT, PUTCH, DELETE запросов. __Routers.register__ 3им аргументом может принимать __base_name__, который явлется обязательным при отсутвсвии во вьюсете __queryset__, по которому проиходит подстановка.
 
 ## Скрипт для заполнения таблиц базы данных
+
+
+
+## Подключение Django Toold Bar
+
+[Django Debug Toolbar](https://django-debug-toolbar.readthedocs.io/en/latest/installation.html)
+
+Установка __django-debug-toolbar__ через __pipenv__. Прописываем установленный пакет в __INSTALLED_APPS__, в коллекцию __MIDDLEWARE__ так же указываем установленный пакет. Потом прописываем новую коллекцию __INTERNAL_IPS__ со списком отслеживаемых IP-адресов.
+
+Так же необходимо добавить __DEBUG_TOOLBAR_CONFIG__ для корректной работы его с __DRF__.
+
+
