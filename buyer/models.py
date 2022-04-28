@@ -8,7 +8,6 @@ class Buyer(CommonAbstractModel):
     '''Buyers.'''
     first_name = models.CharField(max_length=255, verbose_name='First name')
     last_name = models.CharField(max_length=255, verbose_name='Last name')
-    # email_address = models.CharField(max_length=255, verbose_name='Email address')
     balance = MoneyField(max_digits=10, decimal_places=2, default_currency='USD')
     user = models.OneToOneField(UserProfile, on_delete=models.CASCADE)
 
