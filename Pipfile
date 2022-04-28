@@ -12,6 +12,7 @@ django-countries = "*"
 djangorestframework = "*"
 faker = "*"
 django-debug-toolbar = "*"
+drf-yasg = "*"
 
 [dev-packages]
 

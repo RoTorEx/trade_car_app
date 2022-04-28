@@ -77,3 +77,10 @@
 Так же необходимо добавить __DEBUG_TOOLBAR_CONFIG__ для корректной работы его с __DRF__.
 
 
+## Подключение Swagger
+
+[Swagger](https://gadjimuradov.ru/post/swagger-dlya-django-rest-framework/)
+
+Скачиваем модуль __drf-yasg__ и устанавливаем в __INSTALLED_APPS__. Определяем Swagger в отдельном файле __swagger.py__ в головной директории.
+
+http://0.0.0.0:8000/Swagger - адрес для работы со Swagger'ом.

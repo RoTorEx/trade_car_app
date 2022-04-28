@@ -24,6 +24,7 @@ from car.views import CarViewSet, CarPriceViewSet, CarCharactersViewSet
 from core.views import OfferViewSet, PromotionViewSet, index
 from dealership.views import DealershipViewSet, DealershipHistoryViewSet
 from supplier.views import SupplierViewSet, SupplierHistoryViewSet
+from admin.swagger import urlpatterns as doc_urls
 
 
 # Application APIs
@@ -56,6 +57,8 @@ urlpatterns = [
     path('api/', include(router.urls)),
     path('', include('core.urls')),
 ]
+
+urlpatterns += doc_urls  # Add Swagger
 
 # Debug toolbar
 if bool(settings.DEBUG):
