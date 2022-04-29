@@ -3,6 +3,7 @@ from rest_framework import generics, viewsets, mixins
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAdminUser, IsAuthenticated
+from django_filters.rest_framework import DjangoFilterBackend
 
 from buyer.models import Buyer, BuyerHistory
 from buyer.serializers import BuyerSerializer, BuyerHistorySerializer
@@ -14,6 +15,9 @@ class BuyerViewSet(mixins.ListModelMixin,
     '''Permissioned viewset of buyers. ModelViewSet means all API requests are available.'''
     queryset = Buyer.objects.select_related('user').all()
     serializer_class = BuyerSerializer
+
+    filter_backends = (DjangoFilterBackend, )
+    filter_fields = ['first_name']
 
     def get_queryset(self):
         current_user = self.request.user

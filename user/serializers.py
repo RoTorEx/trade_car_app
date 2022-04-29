@@ -4,8 +4,7 @@ from user.models import UserProfile
 
 class UserProfileSerializer(serializers.ModelSerializer):
     '''Users profile serializer.'''
-    user = serializers.StringRelatedField(read_only=True)
 
     class Meta:
         model = UserProfile
-        fields = '__all__'
+        fields = ['id', 'username', 'role', 'email', 'verifyed_email', 'is_superuser']

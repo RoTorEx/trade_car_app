@@ -19,4 +19,4 @@ class PromotionViewSet(viewsets.ModelViewSet):
 
 
 def index(request):  # HttpRequest
-    return HttpResponse("Main app page!")
+    return HttpResponse("Welcome, dude, to main app page!")

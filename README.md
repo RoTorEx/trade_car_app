@@ -129,6 +129,15 @@ http://0.0.0.0:8000/api/token/refresh/ - по истечению жизни __ac
 http://0.0.0.0:8000/Swagger - адрес для работы со Swagger'ом.
 
 
+## Django-filter 
+
+[Django-filter](https://django-filter.readthedocs.io/en/stable/index.html)
+
+Создание фильтрации через открыте API DRF, скачиваем, устанавливаем, всё как обычно. Создаём в ядре сайта __service.py__, где определяем фильтрующие классы. [Инструкция с примерами](https://russianblogs.com/article/1476297017/).
+
+Во __views.py__ импортируем  определяем кортеж фильтрующих элементов и переменные с полями для поиска, сортировки - *from rest_framework import filters*, и для фильтарции данных - *from django_filters.rest_framework import DjangoFilterBackend*.
+
+
 <!-- ## Скрипт для заполнения таблиц базы данных
 
 Скрипт для заполнения таблиц базы данных реализуется через обязательное добавление директорий в приложение, в данном случае __core__, __management/commands__. 

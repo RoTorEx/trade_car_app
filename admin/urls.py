@@ -20,6 +20,7 @@ from django.conf import settings
 from rest_framework import routers
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView, TokenVerifyView
 
+from user.views import UserProfileViewSet
 from buyer.views import BuyerViewSet, BuyerHistoryViewSet
 from car.views import CarViewSet, CarPriceViewSet, CarCharactersViewSet
 from core.views import OfferViewSet, PromotionViewSet, index
@@ -30,6 +31,8 @@ from admin.swagger import urlpatterns as doc_urls
 
 # Application APIs
 addresses = (
+    (r'user', UserProfileViewSet, 'user'),
+
     (r'buyer', BuyerViewSet, 'buyer'),
     (r'buyer_history', BuyerHistoryViewSet, 'buyer_history'),
 
