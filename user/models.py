@@ -1,6 +1,6 @@
 from django.db import models
 from django.core.mail import send_mail
-from django.contrib.auth.models import PermissionsMixin, UserManager  # , User
+from django.contrib.auth.models import PermissionsMixin, UserManager
 from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
 from django.contrib.auth.validators import UnicodeUsernameValidator
 from django.utils.translation import gettext_lazy as _
@@ -36,20 +36,11 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
         },
     )
 
-    # role = models.CharField(max_length=15, choices=ROLE)
     role = models.CharField(max_length=15, choices=ROLE, blank=True)
 
     email = models.EmailField(_("email address"), blank=False)
 
     verifyed_email = models.BooleanField(default=False)
-
-    # first_name = None
-    # last_name = None
-    # date_joined = None
-
-    # first_name = models.CharField(_("first name"), max_length=150, blank=True)
-    # last_name = models.CharField(_("last name"), max_length=150, blank=True)
-    # date_joined = models.DateTimeField(_("date joined"), default=timezone.now)
 
     is_staff = models.BooleanField(
         _("staff status"),
@@ -76,8 +67,6 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
     class Meta:
         verbose_name = _("user")
         verbose_name_plural = _("users")
-        # abstract = True
-        # swappable = "AUTH_USER_MODEL"
 
     def __str__(self):
         return self.username
