@@ -27,6 +27,7 @@ SECRET_KEY = os.environ.get("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 # DEBUG = True
 DEBUG = int(os.environ.get("DEBUG", default=0))
+# DEBUG = True
 
 # ALLOWED_HOSTS = ['0.0.0.0', '127.0.0.1']
 ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS").split(" ")
@@ -55,6 +56,9 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'rest_framework.authtoken',
     'djoser',
+    'debug_toolbar',
+    'drf_yasg',
+
 ]
 
 AUTH_USER_MODEL = 'user.UserProfile'
@@ -68,6 +72,9 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+if DEBUG:
+    MIDDLEWARE.append('debug_toolbar.middleware.DebugToolbarMiddleware')  # Debug toolbar
 
 ROOT_URLCONF = 'admin.urls'
 
@@ -147,7 +154,7 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# smpt
+# Smpt
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = 'django.trade.app@gmail.com'
@@ -209,4 +216,11 @@ DJOSER = {
     'ACTIVATION_URL': '#/activate/{uid}/{token}',
     'SEND_ACTIVATION_EMAIL': True,
     'SERIALIZERS': {}
+}
+
+# Debug toolbar
+INTERNAL_IPS = ('0.0.0.0', '127.0.0.1', )
+
+DEBUG_TOOLBAR_CONFIG = {
+    "SHOW_TOOLBAR_CALLBACK": lambda request: True,
 }

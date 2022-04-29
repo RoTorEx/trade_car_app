@@ -13,6 +13,8 @@ djangorestframework = "*"
 faker = "*"
 djangorestframework-simplejwt = "*"
 djoser = "==2.0.5"
+django-debug-toolbar = "*"
+drf-yasg = "*"
 
 [dev-packages]
 

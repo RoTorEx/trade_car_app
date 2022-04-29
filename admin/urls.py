@@ -16,14 +16,16 @@ Including another URLconf
 
 from django.contrib import admin
 from django.urls import include, path, re_path
+from django.conf import settings
 from rest_framework import routers
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView, TokenVerifyView
 
 from buyer.views import BuyerViewSet, BuyerHistoryViewSet
 from car.views import CarViewSet, CarPriceViewSet, CarCharactersViewSet
-from core.views import OfferViewSet, PromotionViewSet
+from core.views import OfferViewSet, PromotionViewSet, index
 from dealership.views import DealershipViewSet, DealershipHistoryViewSet
 from supplier.views import SupplierViewSet, SupplierHistoryViewSet
+from admin.swagger import urlpatterns as doc_urls
 
 
 # Application APIs
@@ -64,4 +66,16 @@ urlpatterns = [
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('api/token/verify/', TokenVerifyView.as_view(), name='token_verify'),
+
+    path('', include('core.urls')),
 ]
+
+urlpatterns += doc_urls  # Add Swagger
+
+# Debug toolbar
+if bool(settings.DEBUG):
+    import debug_toolbar
+
+    urlpatterns = [
+        path('__debug__/', include(debug_toolbar.urls))
+    ] + urlpatterns

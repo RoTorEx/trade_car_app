@@ -111,6 +111,24 @@ http://0.0.0.0:8000/api/token/refresh/ - по истечению жизни __ac
 Настроены права доступа пользователей только к собственным данным и общий доступ для суперпользователей.
 
 
+## Подключение Django Toold Bar
+
+[Django Debug Toolbar](https://django-debug-toolbar.readthedocs.io/en/latest/installation.html)
+
+Установка __django-debug-toolbar__ через __pipenv__. Прописываем установленный пакет в __INSTALLED_APPS__, в коллекцию __MIDDLEWARE__ так же указываем установленный пакет. Потом прописываем новую коллекцию __INTERNAL_IPS__ со списком отслеживаемых IP-адресов.
+
+Так же необходимо добавить __DEBUG_TOOLBAR_CONFIG__ для корректной работы его с __DRF__.
+
+
+## Подключение Swagger
+
+[Swagger](https://gadjimuradov.ru/post/swagger-dlya-django-rest-framework/)
+
+Скачиваем модуль __drf-yasg__ и устанавливаем в __INSTALLED_APPS__. Определяем Swagger в отдельном файле __swagger.py__ в головной директории.
+
+http://0.0.0.0:8000/Swagger - адрес для работы со Swagger'ом.
+
+
 <!-- ## Скрипт для заполнения таблиц базы данных
 
 Скрипт для заполнения таблиц базы данных реализуется через обязательное добавление директорий в приложение, в данном случае __core__, __management/commands__. 
@@ -118,3 +136,4 @@ http://0.0.0.0:8000/api/token/refresh/ - по истечению жизни __ac
 В скрипте прописываем класс __Command__, который наследуется от __BaseCommand__. В нём переопределяем метод __handle__, где и прописываем необходимый для исполнения по команду код.
 
 Код исполняется внутри контейнера, и запускается: *docker-compose exec web python manage.py fill_db*. -->
+
