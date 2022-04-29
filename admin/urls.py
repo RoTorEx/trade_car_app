@@ -76,7 +76,7 @@ urlpatterns = [
 urlpatterns += doc_urls  # Add Swagger
 
 # Debug toolbar
-if bool(settings.DEBUG):
+if settings.DEBUG:
     import debug_toolbar
 
     urlpatterns = [

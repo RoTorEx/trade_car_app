@@ -4,7 +4,7 @@ from dealership.models import Dealership, DealershipHistory
 from user.models import UserProfile
 
 
-class UserBuyerSerializer(serializers.ModelSerializer):
+class UserDealershipSerializer(serializers.ModelSerializer):
     '''Dealership user serializer.'''
     class Meta:
         model = UserProfile
@@ -13,7 +13,7 @@ class UserBuyerSerializer(serializers.ModelSerializer):
 
 class DealershipSerializer(serializers.ModelSerializer):
     '''Dealership serializer.'''
-    user = UserBuyerSerializer(read_only=True)
+    user = UserDealershipSerializer(read_only=True)
 
     class Meta:
         model = Dealership

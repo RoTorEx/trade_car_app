@@ -4,7 +4,7 @@ from supplier.models import Supplier, SupplierHistory
 from user.models import UserProfile
 
 
-class UserBuyerSerializer(serializers.ModelSerializer):
+class UserSupplierSerializer(serializers.ModelSerializer):
     '''Supplier user serializer.'''
     class Meta:
         model = UserProfile
@@ -13,7 +13,7 @@ class UserBuyerSerializer(serializers.ModelSerializer):
 
 class SupplierSerializer(serializers.ModelSerializer):
     '''Supplier serializer.'''
-    user = UserBuyerSerializer(read_only=True)
+    user = UserSupplierSerializer(read_only=True)
 
     class Meta:
         model = Supplier
