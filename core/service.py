@@ -4,6 +4,7 @@ from django_filters.widgets import BooleanWidget
 
 from user.models import UserProfile
 from buyer.models import Buyer
+from dealership.models import Dealership
 
 
 class CharFieldInFilter(filters.BaseInFilter, filters.CharFilter):
@@ -32,3 +33,14 @@ class BuyerFilter(filters.FilterSet):
     class Meta:
         model = Buyer
         fields = ('first_name', 'last_name', 'balance', 'user')
+
+
+class DealershipFilter(filters.FilterSet):
+    name = CharFieldInFilter(lookup_expr='iexact')
+    location = CharFieldInFilter(lookup_expr='iexact')
+    balance_min = django_filters.NumberFilter(field_name='balance', lookup_expr='gt')
+    balance_max = django_filters.NumberFilter(field_name='balance', lookup_expr='lt')
+
+    class Meta:
+        model = Dealership
+        fields = ('name', 'location', 'balance')
