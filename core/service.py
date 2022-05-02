@@ -5,6 +5,7 @@ from django_filters.widgets import BooleanWidget
 from user.models import UserProfile
 from buyer.models import Buyer
 from dealership.models import Dealership
+from supplier.models import Supplier
 
 
 class CharFieldInFilter(filters.BaseInFilter, filters.CharFilter):
@@ -44,3 +45,13 @@ class DealershipFilter(filters.FilterSet):
     class Meta:
         model = Dealership
         fields = ('name', 'location', 'balance')
+
+
+class SupplierFilter(filters.FilterSet):
+    name = CharFieldInFilter(lookup_expr='iexact')
+    year_of_foundation_min = django_filters.NumberFilter(field_name='year_of_foundation', lookup_expr='gt')
+    year_of_foundation_max = django_filters.NumberFilter(field_name='year_of_foundation', lookup_expr='lt')
+
+    class Meta:
+        model = Supplier
+        fields = ('name', 'year_of_foundation')
