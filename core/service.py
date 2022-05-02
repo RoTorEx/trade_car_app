@@ -3,6 +3,7 @@ from django_filters import rest_framework as filters
 from django_filters.widgets import BooleanWidget
 
 from user.models import UserProfile
+from buyer.models import Buyer
 
 
 class CharFieldInFilter(filters.BaseInFilter, filters.CharFilter):
@@ -19,3 +20,15 @@ class UserProfileFilter(filters.FilterSet):
     class Meta:
         model = UserProfile
         fields = ('username', 'email', 'verifyed_email', 'role', 'is_superuser')
+
+
+class BuyerFilter(filters.FilterSet):
+    first_name = CharFieldInFilter(lookup_expr='iexact')
+    last_name = CharFieldInFilter(lookup_expr='iexact')
+    balance_min = django_filters.NumberFilter(field_name='balance', lookup_expr='gt')
+    balance_max = django_filters.NumberFilter(field_name='balance', lookup_expr='lt')
+    user = CharFieldInFilter(field_name='user__username', lookup_expr='in')
+
+    class Meta:
+        model = Buyer
+        fields = ('first_name', 'last_name', 'balance', 'user')
