@@ -6,8 +6,8 @@ from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAdminUser, I
 from rest_framework import filters
 from django_filters.rest_framework import DjangoFilterBackend
 
-from supplier.models import Supplier, SupplierHistory
-from supplier.serializers import SupplierSerializer, SupplierHistorySerializer
+from supplier.models import Supplier, SupplierGarage
+from supplier.serializers import SupplierSerializer, SupplierGarageSerializer
 from core.service import SupplierFilter
 
 
@@ -23,7 +23,6 @@ class SupplierViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, viewsets
 
     def get_queryset(self):
         current_user = self.request.user
-        # print('\n', self.request.user.id, '\n')  # Marker
         if current_user.is_superuser:
             return self.queryset.all()
         else:
@@ -32,7 +31,7 @@ class SupplierViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, viewsets
     permission_classes = (IsAuthenticated, )
 
 
-class SupplierHistoryViewSet(viewsets.ModelViewSet):
+class SupplierGarageViewSet(viewsets.ModelViewSet):
     '''Viewset of the history of car suppliers.'''
-    queryset = SupplierHistory.objects.all()
-    serializer_class = SupplierHistorySerializer
+    queryset = SupplierGarage.objects.all()
+    serializer_class = SupplierGarageSerializer

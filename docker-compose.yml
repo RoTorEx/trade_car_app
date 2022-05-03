@@ -37,7 +37,7 @@ services:
       - ./data/db:/var/lib/postgresql/data
     # Ports
     ports:
-      - 54321:5432
+      - 5432:5432
     # Database variables
     env_file:
       - .env

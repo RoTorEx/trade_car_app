@@ -20,12 +20,11 @@ class BuyerViewSet(mixins.ListModelMixin,
 
     filter_backends = (filters.SearchFilter, filters.OrderingFilter, DjangoFilterBackend)
     search_fields = ('first_name', )
-    ordering_fields = ('first_name', 'last_name', 'balance', 'user')
+    ordering_fields = ('user', 'first_name', 'last_name', 'balance')
     filterset_class = BuyerFilter
 
     def get_queryset(self):
         current_user = self.request.user
-        # print('\n', self.request.user.id, '\n')  # Marker
         if current_user.is_superuser:
             return self.queryset.all()
         else:

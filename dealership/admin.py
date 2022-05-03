@@ -1,9 +1,9 @@
 from django.contrib import admin
-from dealership.models import Dealership, DealershipHistory
+from dealership.models import Dealership, DealershipGarage, DealershipBuyHistory, DealershipSaleHistory, DealershipPromo
 
 
 # Tuple of current application models
-models = (Dealership, DealershipHistory,)
+models = (Dealership, DealershipGarage, DealershipBuyHistory, DealershipSaleHistory, DealershipPromo)
 
 # Registration of models
 for m in models:

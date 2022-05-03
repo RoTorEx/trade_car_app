@@ -1,10 +1,6 @@
 from django.contrib import admin
-from car.models import Car, CarPrice, CarCharacters
+
+from car.models import Car
 
 
-# Tuple of current application models
-models = (Car, CarPrice, CarCharacters,)
-
-# Registration of models
-for m in models:
-    admin.site.register(m)
+admin.site.register(Car)

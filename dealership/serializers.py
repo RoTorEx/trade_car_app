@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from dealership.models import Dealership, DealershipHistory
+from dealership.models import Dealership, DealershipGarage, DealershipBuyHistory, DealershipSaleHistory
 from user.models import UserProfile
 
 
@@ -17,12 +17,25 @@ class DealershipSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Dealership
-        fields = ['id', 'user', 'name', 'location', 'balance_currency', 'balance',
-                  'cars', 'cars_price', 'cars_chars', 'buyers', 'is_active']
+        fields = ['id', 'user', 'name', 'location', 'balance', 'is_active']
 
 
-class DealershipHistorySerializer(serializers.ModelSerializer):
-    '''Car showroom history serializer.'''
+class DealershipGarageSerializer(serializers.ModelSerializer):
+    '''Dealership cars serializer.'''
     class Meta:
-        model = DealershipHistory
+        model = DealershipGarage
+        fields = '__all__'
+
+
+class DealershipBuyHistorySerializer(serializers.ModelSerializer):
+    '''Dealership cars serializer.'''
+    class Meta:
+        model = DealershipBuyHistory
+        fields = '__all__'
+
+
+class DealershipSaleHistorySerializer(serializers.ModelSerializer):
+    '''Dealership cars serializer.'''
+    class Meta:
+        model = DealershipSaleHistory
         fields = '__all__'

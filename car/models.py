@@ -1,26 +1,22 @@
 from django.db import models
 from djmoney.models.fields import MoneyField
+
 from core.models import CommonAbstractModel
+
+type = (('gas', 'Gas'), ('diesel', 'Diesel'), ('electric', 'Electric'))
+
+color = (('green', 'Green'), ('yellow', 'Yellow'), ('red', 'Red'), ('blue', 'Blue'), ('pink', 'Pink'),
+         ('grey', 'Grey'), ('orange', 'Orange'), ('gold', 'Gold'), ('silver', 'Silver'), ('black', 'Black'))
 
 
 class Car(CommonAbstractModel):
-    '''Brands and models of cars.'''
-    car_brand = models.CharField(max_length=255, verbose_name='Car brand')
-    car_model = models.CharField(max_length=255, verbose_name='Car model')
+    '''Cars.'''
+    car_brand = models.CharField(max_length=255)
+    car_model = models.CharField(max_length=255)
+    engine_type = models.CharField(max_length=25, choices=type, verbose_name='Engine type')
+    power = models.PositiveSmallIntegerField(verbose_name='Engine power')
+    color = models.CharField(max_length=25, choices=color, verbose_name='Color')
+    description = models.TextField(blank=True)
 
     def __str__(self):
-        return f"{self.car_brand} {self.car_model}"
-
-
-class CarPrice(models.Model):
-    '''The price of cars by suppliers and dealerships.'''
-    car = models.ForeignKey('Car', on_delete=models.CASCADE, verbose_name='Car')
-    car_price = MoneyField(max_digits=10, decimal_places=2, null=True, default_currency='USD', verbose_name='Price')
-
-
-class CarCharacters(models.Model):
-    '''Characteristics of cars.'''
-    car = models.OneToOneField('Car', on_delete=models.CASCADE)
-    engine_type = models.CharField(max_length=255, verbose_name='Engine type')
-    engine_capacity = models.DecimalField(max_digits=3, decimal_places=1, verbose_name='Engine capacity')
-    color = models.CharField(max_length=255)
+        return f"{self.car_brand} {self.car_model} [{self.engine_type}, {self.power}, {self.color}]"

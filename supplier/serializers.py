@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from supplier.models import Supplier, SupplierHistory
+from supplier.models import Supplier, SupplierGarage
 from user.models import UserProfile
 
 
@@ -17,11 +17,11 @@ class SupplierSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Supplier
-        fields = ['id', 'user', 'name', 'year_of_foundation', 'cars', 'cars_price', 'cars_chars', 'is_active']
+        fields = ['id', 'user', 'name', 'year_of_foundation', 'is_active']
 
 
-class SupplierHistorySerializer(serializers.ModelSerializer):
-    '''Delivery history serializer.'''
+class SupplierGarageSerializer(serializers.ModelSerializer):
+    '''Supplier's garage serializer.'''
     class Meta:
-        model = SupplierHistory
+        model = SupplierGarage
         fields = '__all__'

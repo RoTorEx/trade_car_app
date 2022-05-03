@@ -6,12 +6,15 @@ from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAdminUser, I
 from rest_framework import filters
 from django_filters.rest_framework import DjangoFilterBackend
 
-from dealership.models import Dealership, DealershipHistory
-from dealership.serializers import DealershipSerializer, DealershipHistorySerializer
+from dealership.models import Dealership, DealershipGarage, DealershipBuyHistory, DealershipSaleHistory
+from dealership.serializers import (DealershipSerializer, DealershipGarageSerializer,
+                                    DealershipBuyHistorySerializer, DealershipSaleHistorySerializer)
 from core.service import DealershipFilter
 
 
-class DealershipViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet):
+class DealershipViewSet(mixins.ListModelMixin,
+                        mixins.RetrieveModelMixin,
+                        viewsets.GenericViewSet):
     '''Permissioned viewset of car dealerships.'''
     queryset = Dealership.objects.select_related('user').all()
     serializer_class = DealershipSerializer
@@ -23,7 +26,6 @@ class DealershipViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, viewse
 
     def get_queryset(self):
         current_user = self.request.user
-        # print('\n', self.request.user.id, '\n')  # Marker
         if current_user.is_superuser:
             return self.queryset.all()
         else:
@@ -32,7 +34,19 @@ class DealershipViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, viewse
     permission_classes = (IsAuthenticated, )
 
 
-class DealershipHistoryViewSet(viewsets.ModelViewSet):
-    '''Viewset of the history of car dealerships.'''
-    queryset = DealershipHistory.objects.all()
-    serializer_class = DealershipHistorySerializer
+class DealershipGarageViewSet(viewsets.ReadOnlyModelViewSet):
+    '''Viewset of dealership's cars.'''
+    queryset = DealershipGarage.objects.all()
+    serializer_class = DealershipGarageSerializer
+
+
+class DealershipBuyHistoryViewSet(viewsets.ReadOnlyModelViewSet):
+    '''History viewset of bought cars.'''
+    queryset = DealershipBuyHistory.objects.all()
+    serializer_class = DealershipBuyHistorySerializer
+
+
+class DealershipSaleHistoryViewSet(viewsets.ReadOnlyModelViewSet):
+    '''History viewset of sold cars.'''
+    queryset = DealershipSaleHistory.objects.all()
+    serializer_class = DealershipSaleHistorySerializer

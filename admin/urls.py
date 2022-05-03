@@ -20,13 +20,13 @@ from django.conf import settings
 from rest_framework import routers
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView, TokenVerifyView
 
+from admin.swagger import urlpatterns as doc_urls
 from user.views import UserProfileViewSet
 from buyer.views import BuyerViewSet, BuyerHistoryViewSet
-from car.views import CarViewSet, CarPriceViewSet, CarCharactersViewSet
-from core.views import OfferViewSet, PromotionViewSet, index
-from dealership.views import DealershipViewSet, DealershipHistoryViewSet
-from supplier.views import SupplierViewSet, SupplierHistoryViewSet
-from admin.swagger import urlpatterns as doc_urls
+from car.views import CarViewSet
+from dealership.views import (DealershipViewSet, DealershipGarageViewSet,
+                              DealershipBuyHistoryViewSet, DealershipSaleHistoryViewSet)
+from supplier.views import SupplierViewSet, SupplierGarageViewSet
 
 
 # Application APIs
@@ -37,17 +37,14 @@ addresses = (
     (r'buyer_history', BuyerHistoryViewSet, 'buyer_history'),
 
     (r'car', CarViewSet, 'car'),
-    (r'car_price', CarPriceViewSet, 'car_price'),
-    (r'car_characters', CarCharactersViewSet, 'car_characters'),
-
-    (r'offer', OfferViewSet, 'offer'),
-    (r'promotion', PromotionViewSet, 'promotion'),
 
     (r'dealership', DealershipViewSet, 'dealership'),
-    (r'dealership_history', DealershipHistoryViewSet, 'dealership_history'),
+    (r'dealership_garage', DealershipGarageViewSet, 'dealership_garage'),
+    (r'dealership_buy', DealershipBuyHistoryViewSet, 'dealership_buy'),
+    (r'dealership_sale', DealershipSaleHistoryViewSet, 'dealership_sale'),
 
     (r'supplier', SupplierViewSet, 'supplier'),
-    (r'supplier_history', SupplierHistoryViewSet, 'supplier_history'),
+    (r'supplier_garage', SupplierGarageViewSet, 'supplier_garage'),
 )
 
 # Route API registrations
