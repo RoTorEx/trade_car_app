@@ -4,7 +4,7 @@ version: '3.8'
 # List all used services (web & db) with which we can interact with the console
 services:
 
-# The first service is a web application
+# Web application service
   web:
   # Path to the Dockerfile to create the image that starts the service
     build: .
@@ -17,6 +17,7 @@ services:
     # Data save address
     volumes:
       - .:/trade_car_app
+    # Ports
     ports:
       - 8000:8000
     # We collect the virtual machine from the current directory - .env
@@ -27,7 +28,7 @@ services:
       # the web application will wait for the db service to start
       - db
 
-  # The second service is the database
+  # Database service
   db:
     # Image obtained from dockerhub
     image: postgres:13.0-alpine
@@ -35,12 +36,26 @@ services:
     volumes:
       # - postgres_data:/var/lib/postgresql/data
       - ./data/db:/var/lib/postgresql/data
-    # Ports
     ports:
       - 5432:5432
-    # Database variables
     env_file:
       - .env
+
+  # Redis service
+  redis:
+    image: redis:6.2.6
+
+  # Celery service
+  celery:
+    build: .
+    command: celery -A admin worker --loglevel=info --logfile=celery.log
+    env_file:
+      - .env
+    volumes:
+      - .:/trade_car_app
+    depends_on:
+      - web
+      - redis
 
 # volumes:
 #   postgres_data:

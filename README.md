@@ -138,11 +138,21 @@ http://0.0.0.0:8000/Swagger - адрес для работы со Swagger'ом.
 Во __views.py__ импортируем  определяем кортеж фильтрующих элементов и переменные с полями для поиска, сортировки - *from rest_framework import filters*, и для фильтарции данных - *from django_filters.rest_framework import DjangoFilterBackend*.
 
 
-<!-- ## Скрипт для заполнения таблиц базы данных
+## Скрипт для заполнения таблиц базы данных
 
 Скрипт для заполнения таблиц базы данных реализуется через обязательное добавление директорий в приложение, в данном случае __core__, __management/commands__. 
 
 В скрипте прописываем класс __Command__, который наследуется от __BaseCommand__. В нём переопределяем метод __handle__, где и прописываем необходимый для исполнения по команду код.
 
-Код исполняется внутри контейнера, и запускается: *docker-compose exec web python manage.py fill_db*. -->
+Код исполняется внутри контейнера, и запускается: *docker-compose exec web python manage.py fill_db*.
 
+
+## Celery + Flower & Redis
+
+[Celere](https://docs.celeryq.dev/en/v4.0.2/django/first-steps-with-django.html#using-celery-with-django)
+
+Устанавливаем в проект __Celery__ + __Flower__ & __Redis__. Создаём файл __celery.py__ в __admin app__. Куда пропиываем необходимые значения и создаём экземпляр класса __Celery__ __app__, который хранит зачение своего каталога, через который будет производиться запуск __Celery__ в проекте. Так же в этой директории обновим **__init.py__**, зарегестрировав сам __Celery__. И добавим две новые переменные в __.env__ (CELERY_BROKER_URL, CELERY_RESULT_BACKEND).
+
+В __core app__ создаём __tasks.py__ в которым перечислены заданные таски. 
+
+__Docker-compose.yml__ расширим файл новыми сервисами (Celery & Redis).
