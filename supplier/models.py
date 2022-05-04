@@ -13,7 +13,7 @@ class Supplier(CommonAbstractModel):
     year_of_foundation = models.DateField(verbose_name='Year of foundation')
 
     def __str__(self):
-        return f"{self.name} {self.year_of_foundation} <{self.user}>"
+        return f"{self.name} <{self.user}>"
 
 
 class SupplierGarage(models.Model):
@@ -23,7 +23,7 @@ class SupplierGarage(models.Model):
     price = MoneyField(max_digits=10, decimal_places=2, default_currency='USD', verbose_name='Price')
 
     def __str__(self):
-        return f"{self.car}"
+        return f"{self.supplier}: {self.car}"
 
 
 class SupplierPromo(Promotion):

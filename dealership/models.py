@@ -9,7 +9,7 @@ from user.models import UserProfile
 
 
 def get_car_characters():
-    return {'car_brand': [], 'car_model': [], 'engine_type': [], 'power': [], 'color': []}
+    return {'car_brand': [], 'car_model': [], 'engine_type': [], 'transmission': [], 'color': []}
 
 
 class Dealership(CommonAbstractModel):
@@ -27,14 +27,12 @@ class Dealership(CommonAbstractModel):
 class DealershipGarage(CommonAbstractModel):
     '''Dealership's garage.'''
     car = models.ForeignKey(SupplierGarage, on_delete=models.CASCADE)
-    supplier = models.ForeignKey(Supplier, on_delete=models.CASCADE)
     dealership = models.ForeignKey(Dealership, on_delete=models.CASCADE)
     count = models.PositiveIntegerField(default=1)
     price = MoneyField(max_digits=10, decimal_places=2, default_currency='USD', verbose_name='Price')
-    # selling_price = MoneyField(max_digits=10, decimal_places=2, default_currency='USD', verbose_name='Sold price')
 
     def __str__(self):
-        return f"{self.car}"
+        return f"{self.dealership} -> {self.car}"
 
 
 class DealershipBuyHistory(models.Model):
@@ -47,7 +45,7 @@ class DealershipBuyHistory(models.Model):
     common = MoneyField(max_digits=10, decimal_places=2, default_currency='USD', verbose_name='Total price')
 
     def __str__(self):
-        return f'{self.supplier}: {self.dealership} -> {self.car}'
+        return f'{self.supplier}: {self.car} -> {self.dealership}'
 
 
 class DealershipSaleHistory(CommonAbstractModel):
