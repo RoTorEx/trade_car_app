@@ -5,4 +5,4 @@
 /Temp
 /data
 
-celery.log
+celerybeat-schedule

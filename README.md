@@ -28,7 +28,7 @@
 
 Собрать образ и поднять докер компоуз: *docker-compose up -d --build*. Посмотреть логи активного контейнера: *docker-compsoe logs -f*.
 
-Обращаться к сервисам (web – приложение, db – база данных) через запущенный контейнер: *docker-compose exec web(db) ...*. Остановить контейнер и удалить его: *docker-compose down -v*.
+Обращаться к сервисам (web – приложение, db – база данных) через запущенный контейнер: *docker-compose exec web(db) ...*. Остановить контейнер и удалить его: *docker-compose down -v*. Если возникла проблема с активными ендпоинтами, то останавливаем так: *docker-compose down --remove-orphans*.
 
 
 ## Django
@@ -156,3 +156,11 @@ http://0.0.0.0:8000/Swagger - адрес для работы со Swagger'ом.
 В __core app__ создаём __tasks.py__ в которым перечислены заданные таски. 
 
 __Docker-compose.yml__ расширим файл новыми сервисами (Celery & Redis).
+
+Исструкции по установке в проект [Вот тут](https://khashtamov.com/ru/celery-best-practices/), [здесь](https://soshace.com/dockerizing-django-with-postgres-redis-and-celery/) и  [тут](https://hashsum.ru/celery-django-redis/), [а и вот ещё](https://webdevblog.ru/celery-django-i-redis/), [и ещё](https://habr.com/ru/company/otus/blog/503380/).
+
+[Пример](https://github.com/mher/flower/blob/master/docker-compose.yml) __docker-compose.yml__ для __Celery__.
+
+http://localhost:5555/dashboard - адрес __Celery Flower__.
+
+Запуск всех компонентов с воркером и с планировщиком происходит при сборке контейнера __Docker__.

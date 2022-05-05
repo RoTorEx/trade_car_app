@@ -233,17 +233,3 @@ DEBUG_TOOLBAR_CONFIG = {
 
 CELERY_BROKER_URL = os.environ.get("CELERY_BROKER", "redis://redis:6379/0")
 CELERY_RESULT_BACKEND = os.environ.get("CELERY_BROKER", "redis://redis:6379/0")
-
-
-# # REDIS settings
-# # Настройки Redis условные и у вас они могут отличатся в зависимости от конфигурации
-# # REDIS_HOST = '127.0.0.1'
-# REDIS_HOST = '0.0.0.0'
-# REDIS_PORT = '6379'
-# # CELERY settings
-# CELERY_BROKER_URL = 'redis://' + REDIS_HOST + ':' + REDIS_PORT + '/0'
-# CELERY_BROKER_TRANSPORT_OPTION = {'visibility_timeout': 3600}
-# CELERY_RESULT_BACKEND = 'redis://' + REDIS_HOST + ':' + REDIS_PORT + '/0'
-# CELERY_ACCEPT_CONTENT = ['application/json']
-# CELERY_TASK_SERIALIZER = 'json'
-# CELERY_RESULT_SERIALIZER = 'json'
