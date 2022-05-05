@@ -74,7 +74,7 @@ services:
 
   # Flower service
   flower:
-    build: ./
+    build: .
     command: celery -A admin flower
     volumes:
       - .:/trade_car_app

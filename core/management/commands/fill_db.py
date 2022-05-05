@@ -7,19 +7,18 @@ from faker import Faker
 from faker.providers import BaseProvider
 from decimal import Decimal
 
-
 from user.models import UserProfile
 from car.models import Car, engine, color, trans
 from buyer.models import Buyer
 from supplier.models import Supplier, SupplierGarage
-from dealership.models import Dealership
+from dealership.models import Dealership, DealershipGarage, DealershipBuyHistory
 
 
 brand_model = {
     'McLarn': ['570S', '600LT', '720S'],
     'Aston Martin': ['DB11', 'DB9', 'DBX', 'DBX', 'V12 Vintage'],
     'Maserati': ['Levante', 'GranTurismo'],
-    'Porsche': ['911', '911 GT2', '911 GT4', '928', '944' 'Macan', 'Cayman', 'Cayman GT4', 'Cayenne'],
+    'Porsche': ['911', '911 GT2', '911 GT4', '928', '944', 'Macan', 'Cayman', 'Cayman GT4', 'Cayenne'],
     'Tesla': ['Model 3', 'Model S', 'Model X', 'Roadster'],
     'Volvo': ['S40', 'S60', 'S80', 'S90', 'XC40', 'XC60', 'XC80', 'SX90'],
     'Skoda': ['Fabia', 'Octavia', 'Rapid', 'Superb'],
@@ -83,19 +82,29 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
 
+        # Create superusers
+        if not UserProfile.objects.filter(username__in=('root', 'admin')):
+            UserProfile.objects.create_superuser('root', 'root@example.com', '1234')
+            UserProfile.objects.create_superuser('admin', 'admin@example.com', 'admin')
+            print('\nSuperusers created success!\n')
+
+        # Clea databases
         UserProfile.objects.filter(is_superuser=False).delete()
         Car.objects.all().delete()
         Buyer.objects.all().delete()
         Supplier.objects.all().delete()
         Dealership.objects.all().delete()
+        DealershipGarage.objects.all().delete()
+        DealershipBuyHistory.objects.all().delete()
 
         fake = Faker()
-        fake.add_provider(Provider)
+        fake.add_provider(Provider)  # Register custom Faker class
 
+        # Variables
         count_cars = 128
-        count_buyers = 32
+        count_buyers = 24
         count_suppliers = 8
-        count_dealership = 16
+        count_dealership = 12
 
         # Car
         for _ in range(count_cars):
@@ -105,7 +114,6 @@ class Command(BaseCommand):
                 car_brand=car,
                 car_model=r.choice(brand_model[car]),
                 engine_type=r.choice(engine)[0],
-                # power=r.randint(100, 500),
                 transmission=r.choice(trans)[0],
                 color=r.choice(color)[0],
                 description=fake.text(),
@@ -146,16 +154,20 @@ class Command(BaseCommand):
             usr('dealership', name)
 
             brand = list(set([r.choice(list(brand_model.keys())) for _ in range(5)]))
-            model = ([brand_model[i] for i in brand])
-            eng = list(set([r.choice(engine)[0] for _ in range(3)]))
-            transmission = list(set([r.choice(trans)[0] for _ in range(4)]))
-            clr = list(set([r.choice(color)[0] for _ in range(10)]))
+            model = []
+
+            for i in brand:
+                model += brand_model[i]
+
+            eng = list(set([r.choice(engine)[0] for _ in range(2)]))
+            transmission = list(set([r.choice(trans)[0] for _ in range(3)]))
+            clr = list(set([r.choice(color)[0] for _ in range(6)]))
 
             Dealership.objects.create(
                 user=UserProfile.objects.latest('id'),
                 name=fake.dealer(),
                 location=r.choice(list(countries_data.COUNTRIES.keys())),
-                balance=Decimal(str(r.uniform(100, 100_000))).quantize(Decimal('1.00')),
+                balance=Decimal(str(r.uniform(100_000, 100_000_000))).quantize(Decimal('1.00')),
                 car_characters={
                     'car_brand': brand,
                     'car_model': model,
@@ -168,7 +180,7 @@ class Command(BaseCommand):
         # Supplier cars
         for cr in Car.objects.all():
             sup = r.choice(Supplier.objects.all())
-            car_price = Decimal(str(r.uniform(1_000, 150_000))).quantize(Decimal('1.00'))
+            car_price = Decimal(str(r.uniform(1_000, 500_000))).quantize(Decimal('1.00'))
 
             SupplierGarage.objects.create(
                 car=cr,

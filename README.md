@@ -149,7 +149,7 @@ http://0.0.0.0:8000/Swagger - адрес для работы со Swagger'ом.
 
 ## Celery + Flower & Redis
 
-[Celere](https://docs.celeryq.dev/en/v4.0.2/django/first-steps-with-django.html#using-celery-with-django)
+[Celere](https://docs.celeryq.dev/en/v4.0.2/django/first-steps-with-django.html#using-celery-with-django) & [more](https://docs.celeryq.dev/en/stable/reference/cli.html#celery).
 
 Устанавливаем в проект __Celery__ + __Flower__ & __Redis__. Создаём файл __celery.py__ в __admin app__. Куда пропиываем необходимые значения и создаём экземпляр класса __Celery__ __app__, который хранит зачение своего каталога, через который будет производиться запуск __Celery__ в проекте. Так же в этой директории обновим **__init.py__**, зарегестрировав сам __Celery__. И добавим две новые переменные в __.env__ (CELERY_BROKER_URL, CELERY_RESULT_BACKEND).
 

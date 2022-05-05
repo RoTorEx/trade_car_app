@@ -13,13 +13,8 @@ app.autodiscover_tasks()
 
 # Celery Beat tasks
 app.conf.beat_schedule = {
-    'print_log_every_1_minute': {
-        'task': 'core.tasks.print_log',
+    'dealership_buy_car_every_10_minute': {
+        'task': 'core.tasks.dealership_buy_car',
         'schedule': crontab(minute='*/1'),
-        'args': (2, 8),
-    },
-    'user_every_1_minute': {
-        'task': 'core.tasks.user',
-        'schedule': crontab(minute='*/1')
     },
 }
