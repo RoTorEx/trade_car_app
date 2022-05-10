@@ -11,13 +11,4 @@ then
     echo "PostgreSQL started!"
 fi
 
-# Remove old Celery logs
-rm celerybeat-schedule && rm data/celery.log
-
-# Flush DB
-python manage.py flush --no-input
-
-# Fill DB
-python manage.py fill_db
-
 exec "$@"

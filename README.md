@@ -1,7 +1,9 @@
 # Instruction to Trade cars application
 
-## Git commits
+При запуске приложения через __docker-compose__ будет автоматически произовдиться удаление __Celery__ логов, очистка базы данных. Выполнение всех миграций, запуск сервера, и заполнение базы данных новыми значениям с двумя суперпользователями ((root, 1234), (admin, admin)).
 
+
+## Git commits
 
 Общепринятые информативные коммиты [тут](https://habr.com/ru/post/183646/), [вот тут](https://habr.com/ru/company/otus/blog/537196/) и [здесь](https://drbrain.ru/articles/git-commit-message/), [и вот](https://simpleisbetterthancomplex.com/tutorial/2016/07/22/how-to-extend-django-user-model.html#abstractuser).
 

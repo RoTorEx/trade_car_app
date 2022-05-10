@@ -1,4 +1,5 @@
 from django.core.management.base import BaseCommand
+from django.db.models import Min
 from django_countries import data as countries_data
 
 import datetime
@@ -9,9 +10,10 @@ from decimal import Decimal
 
 from user.models import UserProfile
 from car.models import Car, engine, color, trans
-from buyer.models import Buyer
+from core.models import BuyerOffer
+from buyer.models import Buyer, BuyerHistory
 from supplier.models import Supplier, SupplierGarage
-from dealership.models import Dealership, DealershipGarage, DealershipBuyHistory
+from dealership.models import Dealership, DealershipGarage, DealershipBuyHistory, DealershipSaleHistory
 
 
 brand_model = {
@@ -66,14 +68,33 @@ class Provider(BaseProvider):
         return r.choice(dealership_list)
 
 
-def usr(usr_role, name, verify=False):
+def create_characters(brd, eng, trn, clr):
+    '''Method create random preferred car characters.'''
+    car_brand = list(set([r.choice(list(brand_model.keys())) for _ in range(brd)]))
+    car_model = []
+
+    for i in car_brand:
+        car_model += brand_model[i]
+
+    car_engine = list(set([r.choice(engine)[0] for _ in range(eng)]))
+    car_transmission = list(set([r.choice(trans)[0] for _ in range(trn)]))
+    car_color = list(set([r.choice(color)[0] for _ in range(clr)]))
+
+    return {'car_brand': car_brand,
+            'car_model': car_model,
+            'engine': car_engine,
+            'transmission': car_transmission,
+            'color': car_color}
+
+
+def usr(usr_role, name):
     '''Role distributing method.'''
     UserProfile.objects.create(
         username=name,
         email=Faker().email(),
         password='9ol8ik7uj',
         role=usr_role,
-        verifyed_email=verify,
+        verifyed_email=r.choice([False, True])
     )
 
 
@@ -82,31 +103,23 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
 
-        # Create superusers
+        '''Variables.'''
+        count_cars = 144
+        count_buyers = 24
+        count_suppliers = 6
+        count_dealership = 8
+
+        '''Create superusers.'''
         if not UserProfile.objects.filter(username__in=('root', 'admin')):
             UserProfile.objects.create_superuser('root', 'root@example.com', '1234')
             UserProfile.objects.create_superuser('admin', 'admin@example.com', 'admin')
-            print('\nSuperusers created success!\n')
+            print("===< Created superusers >===")
 
-        # Clea databases
+        '''Clear databases.'''
         UserProfile.objects.filter(is_superuser=False).delete()
         Car.objects.all().delete()
-        Buyer.objects.all().delete()
-        Supplier.objects.all().delete()
-        Dealership.objects.all().delete()
-        DealershipGarage.objects.all().delete()
-        DealershipBuyHistory.objects.all().delete()
 
-        fake = Faker()
-        fake.add_provider(Provider)  # Register custom Faker class
-
-        # Variables
-        count_cars = 128
-        count_buyers = 24
-        count_suppliers = 8
-        count_dealership = 12
-
-        # Car
+        '''Car.'''
         for _ in range(count_cars):
             car = r.choice(list(brand_model.keys()))
 
@@ -116,68 +129,59 @@ class Command(BaseCommand):
                 engine_type=r.choice(engine)[0],
                 transmission=r.choice(trans)[0],
                 color=r.choice(color)[0],
-                description=fake.text(),
+                description=Faker().text(),
             )
 
-        # Staff Users
+        '''Staff.'''
         for i in range(12):
-            name = str(i) + 'app_user'
-            verify = True
-            usr('staff', name, verify)
+            usr('staff', str(i) + '_app_user')
 
-        # Buyer
+        '''Buyer.'''
         for _ in range(count_buyers):
-            name = Faker().user_name()
-            usr('buyer', name)
+            usr('buyer', Faker().user_name())  # Create buyer user
 
             Buyer.objects.create(
                 user=UserProfile.objects.latest('id'),
-                first_name=fake.first_name(),
-                last_name=fake.last_name(),
-                balance=Decimal(str(r.uniform(100, 100_000))).quantize(Decimal('1.00')),
+                first_name=Faker().first_name(),
+                last_name=Faker().last_name(),
+                balance=Decimal(str(r.uniform(100_000, 1_000_000))).quantize(Decimal('1.00')),
             )
 
-        # Supplier
+        '''Supplier.'''
         for _ in range(count_suppliers):
-            name = Faker().user_name()
-            usr('supplier', name)
+            usr('supplier', Faker().user_name())  # Create supplier user
 
             Supplier.objects.create(
                 user=UserProfile.objects.latest('id'),
-                name=fake.company(),
+                name=Faker().company(),
                 year_of_foundation=datetime.date(r.randint(1900, 2022), r.randint(1, 12), r.randint(1, 28)),
             )
 
-        # Dealership
+        '''Dealership.'''
+        f = Faker()
+        f.add_provider(Provider)  # Register custom Faker class
+
         for _ in range(count_dealership):
-            name = Faker().user_name()
-            usr('dealership', name)
+            usr('dealership', Faker().user_name())  # Create delership user
 
-            brand = list(set([r.choice(list(brand_model.keys())) for _ in range(5)]))
-            model = []
-
-            for i in brand:
-                model += brand_model[i]
-
-            eng = list(set([r.choice(engine)[0] for _ in range(2)]))
-            transmission = list(set([r.choice(trans)[0] for _ in range(3)]))
-            clr = list(set([r.choice(color)[0] for _ in range(6)]))
+            # Count of random: brand, engine, trasmission, color
+            characters_dict = create_characters(brd=5, eng=3, trn=3, clr=10)  # *Dealership preferences
 
             Dealership.objects.create(
                 user=UserProfile.objects.latest('id'),
-                name=fake.dealer(),
+                name=f.dealer(),
                 location=r.choice(list(countries_data.COUNTRIES.keys())),
                 balance=Decimal(str(r.uniform(100_000, 100_000_000))).quantize(Decimal('1.00')),
                 car_characters={
-                    'car_brand': brand,
-                    'car_model': model,
-                    'engine_type': eng,
-                    'transmission': transmission,
-                    'color': clr,
+                    'car_brand': characters_dict['car_brand'],
+                    'car_model': characters_dict['car_model'],
+                    'engine_type': characters_dict['engine'],
+                    'transmission': characters_dict['transmission'],
+                    'color': characters_dict['color'],
                 }
             )
 
-        # Supplier cars
+        '''Supplier cars.'''
         for cr in Car.objects.all():
             sup = r.choice(Supplier.objects.all())
             car_price = Decimal(str(r.uniform(1_000, 500_000))).quantize(Decimal('1.00'))
@@ -187,3 +191,5 @@ class Command(BaseCommand):
                 supplier=sup,
                 price=car_price,
             )
+
+        print("===< Database filling completed successfully >===")

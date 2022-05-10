@@ -21,6 +21,13 @@ class BuyerSerializer(serializers.ModelSerializer):
         fields = ['id', 'user', 'first_name', 'last_name', 'balance_currency', 'balance', 'is_active']
 
 
+# class BuyerOfferSerializer(serializers.ModelSerializer):
+#     '''Buyer offer serializer.'''
+#     class Meta:
+#         model = BuyerOffer
+#         fields = '__all__'
+
+
 class BuyerHistorySerializer(serializers.ModelSerializer):
     '''Buyer history serializer.'''
     class Meta:

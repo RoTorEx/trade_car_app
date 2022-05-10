@@ -3,6 +3,10 @@ from django.core import validators
 from djmoney.models.fields import MoneyField
 
 
+def get_preferred_car_characters():
+    return {'car_brand': [], 'car_model': [], 'engine_type': [], 'transmission': [], 'color': []}
+
+
 class CommonAbstractModel(models.Model):
     '''Generic class for models with the same fields.'''
     is_active = models.BooleanField(default=True, verbose_name='Active')
@@ -24,11 +28,11 @@ class Promotion(CommonAbstractModel):
         abstract = True
 
 
-class Offer(CommonAbstractModel):
+class BuyerOffer(CommonAbstractModel):
     '''Buyer's offer to buy dealership's car.'''
     buyer = models.ForeignKey('buyer.Buyer', on_delete=models.CASCADE, related_name='offer', verbose_name='Buyer')
     max_price = MoneyField(max_digits=9, decimal_places=2, null=True, default_currency='USD', verbose_name='Max price')
-    car = models.ForeignKey('car.Car', on_delete=models.CASCADE, related_name='car_offer', verbose_name='Preffer car')
+    preferred_car_characters = models.JSONField(default=get_preferred_car_characters)
 
     def __str__(self):
-        return f"{self.buyer} {self.max_price} {self.car}"
+        return f"{self.buyer} {self.max_price}"

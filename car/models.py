@@ -3,10 +3,10 @@ from djmoney.models.fields import MoneyField
 
 from core.models import CommonAbstractModel
 
+
 engine = (('gas', 'Gas'), ('diesel', 'Diesel'), ('electric', 'Electric'))
 
-trans = (('AT', 'Automatic Transmission'), ('MT', 'Manual Transmission'),
-         ('AM', 'Automated Manual Transmission'), ('CVT', 'Continuously Variable Transmission'))
+trans = (('AT', 'Automatic Transmission'), ('MT', 'Manual Transmission'), ('AM', 'Automated Manual Transmission'))
 
 horse_power = (('<100', '<100'), ('>100', '>100'), ('>200', '>200'), ('>300', '>300'), ('>400', '>400'))
 

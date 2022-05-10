@@ -4,30 +4,6 @@ version: '3.8'
 # List all used services (web & db) with which we can interact with the console
 services:
 
-# Web application service
-  web:
-  # Path to the Dockerfile to create the image that starts the service
-    build: .
-    # The command will work on completion of the image
-    command: sh -c "chmod +x ./entrypoint.sh &&
-      ./entrypoint.sh &&
-      python manage.py makemigrations &&
-      python manage.py migrate &&
-      python manage.py runserver 0.0.0.0:8000"
-    # Data save address
-    volumes:
-      - .:/trade_car_app
-    # Ports
-    ports:
-      - 8000:8000
-    # We collect the virtual machine from the current directory - .env
-    env_file:
-      - .env
-    # Service startup dependency
-    depends_on:
-      # the web application will wait for the db service to start
-      - db
-
   # Database service
   db:
     # Image obtained from dockerhub
@@ -46,6 +22,36 @@ services:
     image: redis:alpine
     ports:
       - 6379:6379
+    depends_on:
+      - db
+
+# Web application service
+  web:
+  # Path to the Dockerfile to create the image that starts the service
+    build: .
+    # The command will work on completion of the image
+    command: sh -c "chmod +x ./entrypoint.sh &&
+      ./entrypoint.sh &&
+      rm celerybeat-schedule && rm data/celery.log &&
+      python manage.py flush --no-input &&
+      python manage.py makemigrations &&
+      python manage.py migrate &&
+      python manage.py fill_db &&
+      python manage.py runserver 0.0.0.0:8000"
+    # Data save address
+    volumes:
+      - .:/trade_car_app
+    # Ports
+    ports:
+      - 8000:8000
+    # We collect the virtual machine from the current directory - .env
+    env_file:
+      - .env
+    # Service startup dependency
+    depends_on:
+      # the web application will wait for the db service to start
+      - db
+      - redis
 
   # Worker celery service
   worker:
@@ -57,7 +63,6 @@ services:
       - .:/trade_car_app
     depends_on:
       - web
-      - redis
 
   # Celery beat service
   beat:
@@ -68,8 +73,6 @@ services:
     volumes:
       - .:/trade_car_app
     depends_on:
-      - web
-      - redis
       - worker
 
   # Flower service
@@ -85,7 +88,6 @@ services:
       - .env
     depends_on:
       - beat
-      - redis
 
 # volumes:
 #   postgres_data:
