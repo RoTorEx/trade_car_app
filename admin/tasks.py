@@ -1,15 +1,11 @@
 from time import sleep
-from faker import Faker
 from decimal import Decimal
 import random as r
-from django.db.models import F
 
 from admin.celery import app
-from user.models import UserProfile
 from dealership.models import Dealership, DealershipGarage, DealershipBuyHistory, DealershipSaleHistory, DealershipPromo
-from supplier.models import Supplier, SupplierGarage, SupplierPromo
+from supplier.models import SupplierGarage, SupplierPromo
 from buyer.models import Buyer, BuyerHistory, BuyerOffer
-# from core.models import BuyerOffer
 from core.management.commands.fill_db import create_characters
 
 
@@ -147,8 +143,8 @@ def dealership_buy_car():
 
                 else:
                     pennies = Decimal(str(r.uniform(100_000, 800_000))).quantize(Decimal('1.00'))
-                    # print(f"{dealer} don't have enouth money to buy [{current_count}] {current_car}")
-                    # print(f"Gives some pennies [{pennies}] to him.")
+                    print(f"{dealer} don't have enouth money to buy [{current_count}] {current_car}")
+                    print(f"Gives some pennies [{pennies}] to him.")
                     dealer.balance.amount += pennies
                     dealer.save()
 

@@ -5,6 +5,8 @@ from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
 from django.contrib.auth.validators import UnicodeUsernameValidator
 from django.utils.translation import gettext_lazy as _
 
+from core.enums import UserRoles
+
 
 class UserProfile(AbstractBaseUser, PermissionsMixin):
     """
@@ -13,12 +15,6 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
 
     Username and password are required. Other fields are optional.
     """
-    ROLE = (
-        ('staff', 'Staff'),
-        ('buyer', 'Buyer'),
-        ('dealership', 'Dealership'),
-        ('supplier', 'Supplier'),
-        ('unknown', 'Unknown'))
 
     username_validator = UnicodeUsernameValidator()
 
@@ -36,7 +32,7 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
         },
     )
 
-    role = models.CharField(max_length=15, choices=ROLE, blank=True)
+    role = models.CharField(max_length=15, choices=UserRoles.choices(), blank=True)
 
     email = models.EmailField(_("email address"), blank=False)
 

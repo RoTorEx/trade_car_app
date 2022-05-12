@@ -10,11 +10,11 @@ from faker.providers import BaseProvider
 from decimal import Decimal
 
 from user.models import UserProfile
-from car.models import Car, engine, color, trans
-# from core.models import BuyerOffer
-from buyer.models import Buyer, BuyerHistory, BuyerOffer
+from car.models import Car
+from buyer.models import Buyer
 from supplier.models import Supplier, SupplierGarage, SupplierPromo
-from dealership.models import Dealership, DealershipGarage, DealershipBuyHistory, DealershipSaleHistory, DealershipPromo
+from dealership.models import Dealership
+from core.enums import UserRoles, Engine, Transmission, Color
 
 
 brand_model = {
@@ -77,9 +77,9 @@ def create_characters(brd, eng, trn, clr):
     for i in car_brand:
         car_model += brand_model[i]
 
-    car_engine = list(set([r.choice(engine)[0] for _ in range(eng)]))
-    car_transmission = list(set([r.choice(trans)[0] for _ in range(trn)]))
-    car_color = list(set([r.choice(color)[0] for _ in range(clr)]))
+    car_engine = list(set([r.choice(Engine.choices())[0] for _ in range(eng)]))
+    car_transmission = list(set([r.choice(Transmission.choices())[0] for _ in range(trn)]))
+    car_color = list(set([r.choice(Color.choices())[0] for _ in range(clr)]))
 
     return {'car_brand': car_brand,
             'car_model': car_model,
@@ -95,7 +95,7 @@ def usr(usr_role, name):
         email=Faker().email(),
         password='9ol8ik7uj',
         role=usr_role,
-        verifyed_email=r.choice([True, True, False])
+        verifyed_email=r.choice([True, False])
     )
 
 
@@ -127,19 +127,19 @@ class Command(BaseCommand):
             Car.objects.create(
                 car_brand=car,
                 car_model=r.choice(brand_model[car]),
-                engine_type=r.choice(engine)[0],
-                transmission=r.choice(trans)[0],
-                color=r.choice(color)[0],
+                engine_type=r.choice(Engine.choices())[0],
+                transmission=r.choice(Transmission.choices())[0],
+                color=r.choice(Color.choices())[0],
                 description=Faker().text(),
             )
 
         '''Staff.'''
         for i in range(12):
-            usr('staff', str(i) + '_app_user')
+            usr(UserRoles.choices()[0][0], str(i) + '_app_user')
 
         '''Buyer.'''
         for _ in range(count_buyers):
-            usr('buyer', Faker().user_name())  # Create buyer user
+            usr(UserRoles.choices()[1][0], Faker().user_name())  # Create buyer user
 
             Buyer.objects.create(
                 user=UserProfile.objects.latest('id'),
@@ -150,7 +150,7 @@ class Command(BaseCommand):
 
         '''Supplier.'''
         for _ in range(count_suppliers):
-            usr('supplier', Faker().user_name())  # Create supplier user
+            usr(UserRoles.choices()[2][0], Faker().user_name())  # Create supplier user
 
             Supplier.objects.create(
                 user=UserProfile.objects.latest('id'),
@@ -163,7 +163,7 @@ class Command(BaseCommand):
         f.add_provider(Provider)  # Register custom Faker class
 
         for _ in range(count_dealership):
-            usr('dealership', Faker().user_name())  # Create delership user
+            usr(UserRoles.choices()[3][0], Faker().user_name())  # Create delership user
 
             # Count of random: brand, engine, trasmission, color
             characters_dict = create_characters(brd=5, eng=3, trn=3, clr=10)  # *Dealership preferences
