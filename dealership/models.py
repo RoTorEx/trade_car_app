@@ -25,7 +25,7 @@ class DealershipGarage(CommonAbstractModel):
     '''Dealership's garage.'''
     car = models.ForeignKey('supplier.SupplierGarage', on_delete=models.CASCADE)
     dealership = models.ForeignKey(Dealership, on_delete=models.CASCADE)
-    count = models.PositiveIntegerField(default=1)
+    car_count = models.PositiveIntegerField(default=1)
     price = MoneyField(max_digits=10, decimal_places=2, default_currency='USD', verbose_name='Price')
 
     def __str__(self):
@@ -38,7 +38,7 @@ class DealershipBuyHistory(models.Model):
     supplier = models.ForeignKey('supplier.Supplier', on_delete=models.CASCADE)
     dealership = models.ForeignKey('dealership.Dealership', on_delete=models.CASCADE)
     price = MoneyField(max_digits=10, decimal_places=2, default_currency='USD', verbose_name='Price')
-    count = models.PositiveIntegerField(default=1)
+    car_count = models.PositiveIntegerField(default=1)
     common = MoneyField(max_digits=10, decimal_places=2, default_currency='USD', verbose_name='Total price')
 
     def __str__(self):
@@ -51,9 +51,11 @@ class DealershipSaleHistory(CommonAbstractModel):
     dealership = models.ForeignKey('dealership.Dealership', on_delete=models.CASCADE, verbose_name='Dealership')
     buyer = models.ForeignKey('buyer.Buyer', on_delete=models.CASCADE, verbose_name='Buyer')  # careful with CirleError
     price = MoneyField(max_digits=10, decimal_places=2, default_currency='USD', verbose_name='Sold price')
+    car_count = models.PositiveIntegerField(default=1)
+    total_sum = MoneyField(max_digits=10, decimal_places=2, default_currency='USD', verbose_name='Total sum')
 
     def __str__(self):
-        return f'{self.car}: {self.dealership} ({self.buyer}) - {self.price} - {self.count}'
+        return f'{self.car}: {self.dealership} ({self.buyer}) - {self.price} - {self.car_count}'
 
 
 class DealershipPromo(Promotion):

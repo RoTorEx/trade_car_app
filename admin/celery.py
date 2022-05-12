@@ -14,11 +14,16 @@ app.autodiscover_tasks()
 # Celery Beat tasks
 app.conf.beat_schedule = {
     'dealership_buy_car_every_10_minute': {
-        'task': 'core.tasks.dealership_buy_car',
+        'task': 'admin.tasks.dealership_buy_car',
         'schedule': crontab(minute='*/10'),
     },
-    'dealership_sale_car_every_10_minute': {
-        'task': 'core.tasks.dealership_sale_car',
+    'create_buyer_offer_every_5_minute': {
+        'task': 'admin.tasks.create_buyer_offer',
+        'schedule': crontab(minute='*/5'),
+        'args': (3, ),  # count of random offers for one task
+    },
+    'check_buyers_offer_every_10_minute': {
+        'task': 'admin.tasks.check_buyers_offer',
         'schedule': crontab(minute='*/10'),
     },
 }

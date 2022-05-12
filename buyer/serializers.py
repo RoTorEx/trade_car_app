@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from rest_framework.renderers import JSONRenderer
 
-from buyer.models import Buyer, BuyerHistory
+from buyer.models import Buyer, BuyerHistory, BuyerOffer
 from user.models import UserProfile
 
 
@@ -21,11 +21,11 @@ class BuyerSerializer(serializers.ModelSerializer):
         fields = ['id', 'user', 'first_name', 'last_name', 'balance_currency', 'balance', 'is_active']
 
 
-# class BuyerOfferSerializer(serializers.ModelSerializer):
-#     '''Buyer offer serializer.'''
-#     class Meta:
-#         model = BuyerOffer
-#         fields = '__all__'
+class BuyerOfferSerializer(serializers.ModelSerializer):
+    '''Buyer offer serializer.'''
+    class Meta:
+        model = BuyerOffer
+        fields = '__all__'
 
 
 class BuyerHistorySerializer(serializers.ModelSerializer):

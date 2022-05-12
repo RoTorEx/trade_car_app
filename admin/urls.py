@@ -22,7 +22,7 @@ from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 from admin.swagger import urlpatterns as doc_urls
 from user.views import UserProfileViewSet
-from buyer.views import BuyerViewSet, BuyerHistoryViewSet
+from buyer.views import BuyerViewSet, BuyerHistoryViewSet, BuyerOfferViewSet
 from car.views import CarViewSet
 from dealership.views import (DealershipViewSet, DealershipGarageViewSet,
                               DealershipBuyHistoryViewSet, DealershipSaleHistoryViewSet)
@@ -35,6 +35,7 @@ addresses = (
 
     (r'buyer', BuyerViewSet, 'buyer'),
     (r'buyer_history', BuyerHistoryViewSet, 'buyer_history'),
+    (r'buyer_offer', BuyerOfferViewSet, 'buyer_offer'),
 
     (r'car', CarViewSet, 'car'),
 

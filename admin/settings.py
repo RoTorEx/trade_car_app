@@ -140,7 +140,9 @@ TIME_ZONE = 'Europe/Minsk'
 
 USE_I18N = True
 
-USE_TZ = True
+USE_TZ = False
+
+SILENCED_SYSTEM_CHECKS = ["fields.W161"]
 
 
 # Static files (CSS, JavaScript, Images)

@@ -3,7 +3,7 @@ from django_filters import rest_framework as filters
 from django_filters.widgets import BooleanWidget
 
 from user.models import UserProfile
-from buyer.models import Buyer
+from buyer.models import Buyer, BuyerOffer
 from dealership.models import Dealership
 from supplier.models import Supplier
 
@@ -34,6 +34,14 @@ class BuyerFilter(filters.FilterSet):
     class Meta:
         model = Buyer
         fields = ('first_name', 'last_name', 'balance', 'user')
+
+
+class BuyerOfferFilter(filters.FilterSet):
+    active_status = CharFieldInFilter(lookup_expr='iexact')
+
+    class Meta:
+        model = BuyerOffer
+        fields = ('active_status', )
 
 
 class DealershipFilter(filters.FilterSet):

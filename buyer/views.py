@@ -6,9 +6,9 @@ from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAdminUser, I
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters
 
-from buyer.models import Buyer, BuyerHistory
-from buyer.serializers import BuyerSerializer, BuyerHistorySerializer
-from core.service import BuyerFilter
+from buyer.models import Buyer, BuyerHistory, BuyerOffer
+from buyer.serializers import BuyerSerializer, BuyerHistorySerializer, BuyerOfferSerializer
+from core.service import BuyerFilter, BuyerOfferFilter
 
 
 class BuyerViewSet(mixins.ListModelMixin,
@@ -33,10 +33,14 @@ class BuyerViewSet(mixins.ListModelMixin,
     permission_classes = (IsAuthenticated, )
 
 
-# class BuyerOfferViewSet(viewsets.ReadOnlyModelViewSet):
-#     '''Viewset of buyer car offer. ReadOnlyModelViewSet only allows data to be read.'''
-#     queryset = BuyerHistory.objects.all()
-#     serializer_class = BuyerOfferSerializer
+class BuyerOfferViewSet(viewsets.ReadOnlyModelViewSet):
+    '''Viewset of buyer car offer. ReadOnlyModelViewSet only allows data to be read.'''
+    queryset = BuyerOffer.objects.all()
+    serializer_class = BuyerOfferSerializer
+
+    filter_backends = (filters.SearchFilter, filters.OrderingFilter, DjangoFilterBackend)
+    ordering_fields = ('active_status', )
+    filterset_class = BuyerOfferFilter
 
 
 class BuyerHistoryViewSet(viewsets.ReadOnlyModelViewSet):

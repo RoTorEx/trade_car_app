@@ -1,8 +1,9 @@
 from django.core.management.base import BaseCommand
-from django.db.models import Min
+from django.db.models import Min, F
 from django_countries import data as countries_data
 
 import datetime
+import time
 import random as r
 from faker import Faker
 from faker.providers import BaseProvider
@@ -10,10 +11,10 @@ from decimal import Decimal
 
 from user.models import UserProfile
 from car.models import Car, engine, color, trans
-from core.models import BuyerOffer
-from buyer.models import Buyer, BuyerHistory
-from supplier.models import Supplier, SupplierGarage
-from dealership.models import Dealership, DealershipGarage, DealershipBuyHistory, DealershipSaleHistory
+# from core.models import BuyerOffer
+from buyer.models import Buyer, BuyerHistory, BuyerOffer
+from supplier.models import Supplier, SupplierGarage, SupplierPromo
+from dealership.models import Dealership, DealershipGarage, DealershipBuyHistory, DealershipSaleHistory, DealershipPromo
 
 
 brand_model = {
@@ -94,7 +95,7 @@ def usr(usr_role, name):
         email=Faker().email(),
         password='9ol8ik7uj',
         role=usr_role,
-        verifyed_email=r.choice([False, True])
+        verifyed_email=r.choice([True, ])
     )
 
 
@@ -105,7 +106,7 @@ class Command(BaseCommand):
 
         '''Variables.'''
         count_cars = 144
-        count_buyers = 24
+        count_buyers = 16
         count_suppliers = 6
         count_dealership = 8
 
@@ -171,7 +172,7 @@ class Command(BaseCommand):
                 user=UserProfile.objects.latest('id'),
                 name=f.dealer(),
                 location=r.choice(list(countries_data.COUNTRIES.keys())),
-                balance=Decimal(str(r.uniform(100_000, 100_000_000))).quantize(Decimal('1.00')),
+                balance=Decimal(str(r.uniform(150_000, 3_000_000))).quantize(Decimal('1.00')),
                 car_characters={
                     'car_brand': characters_dict['car_brand'],
                     'car_model': characters_dict['car_model'],
@@ -184,7 +185,7 @@ class Command(BaseCommand):
         '''Supplier cars.'''
         for cr in Car.objects.all():
             sup = r.choice(Supplier.objects.all())
-            car_price = Decimal(str(r.uniform(1_000, 500_000))).quantize(Decimal('1.00'))
+            car_price = Decimal(str(r.uniform(1_000, 100_000))).quantize(Decimal('1.00'))
 
             SupplierGarage.objects.create(
                 car=cr,
@@ -192,4 +193,22 @@ class Command(BaseCommand):
                 price=car_price,
             )
 
-        print("===< Database filling completed successfully >===")
+        '''Supplier promotion.'''
+        all_supplier = Supplier.objects.all()
+
+        for sup in all_supplier:
+            if len(SupplierGarage.objects.filter(supplier=sup)):
+                # Get all cars for one supplier
+                each_sup_cars = r.sample(
+                    list(SupplierGarage.objects.filter(supplier=sup)),
+                    r.randint(10, len(SupplierGarage.objects.filter(supplier=sup)))
+                )
+
+                for each_car in each_sup_cars:
+                    SupplierPromo.objects.create(
+                        supplier=sup,
+                        car=each_car,
+                        discount=r.randint(1, 50)
+                    )
+
+        print("===< Database filling completed successfully >===", end='\n\n')

@@ -2,9 +2,7 @@ from django.db import models
 from django.core import validators
 from djmoney.models.fields import MoneyField
 
-
-def get_preferred_car_characters():
-    return {'car_brand': [], 'car_model': [], 'engine_type': [], 'transmission': [], 'color': []}
+import datetime
 
 
 class CommonAbstractModel(models.Model):
@@ -21,18 +19,9 @@ class Promotion(CommonAbstractModel):
     '''Promotions in car dealerships and suppliers valid for cars.'''
     discount = models.PositiveIntegerField(validators=[validators.MaxValueValidator(50)], default=0)
     description = models.TextField(blank=True, verbose_name='Discount description')
-    start = models.DateField(verbose_name='Start discount date')
-    end = models.DateField(verbose_name='End discount date')
+    start = models.DateTimeField(default=datetime.datetime.now(), verbose_name='Start discount date')
+    end = models.DateTimeField(default=(datetime.datetime.now() + datetime.timedelta(days=3)),
+                               verbose_name='End discount date')
 
     class Meta:
         abstract = True
-
-
-class BuyerOffer(CommonAbstractModel):
-    '''Buyer's offer to buy dealership's car.'''
-    buyer = models.ForeignKey('buyer.Buyer', on_delete=models.CASCADE, related_name='offer', verbose_name='Buyer')
-    max_price = MoneyField(max_digits=9, decimal_places=2, null=True, default_currency='USD', verbose_name='Max price')
-    preferred_car_characters = models.JSONField(default=get_preferred_car_characters)
-
-    def __str__(self):
-        return f"{self.buyer} {self.max_price}"
