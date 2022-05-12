@@ -299,7 +299,7 @@ def check_buyers_offer():
 
             if current_car.car_count == 0:
                 DealershipGarage.objects.filter(car=current_car.car, dealership=current_dealer).delete()
-                print("Removing field from {current_car} with zero car count...")
+                print(f"Removing field from {current_car} with zero car count...")
 
             '''Change current offer status'''
             print(f"{offer} closed success!")

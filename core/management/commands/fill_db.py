@@ -95,7 +95,7 @@ def usr(usr_role, name):
         email=Faker().email(),
         password='9ol8ik7uj',
         role=usr_role,
-        verifyed_email=r.choice([True, ])
+        verifyed_email=r.choice([True, True, False])
     )
 
 
