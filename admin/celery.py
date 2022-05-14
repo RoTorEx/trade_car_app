@@ -26,4 +26,8 @@ app.conf.beat_schedule = {
         'task': 'admin.tasks.check_buyers_offer',
         'schedule': crontab(minute='*/10'),
     },
+    'trade_statistic_every_30_minute': {
+        'task': 'admin.tasks.trade_statistic',
+        'schedule': crontab(minute='*/30'),
+    },
 }

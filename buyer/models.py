@@ -39,3 +39,12 @@ class BuyerOffer(CommonAbstractModel):
 
     def __str__(self):
         return f"{self.max_price}"
+
+
+class BuyerStatistic(models.Model):
+    buyer_stat = models.ForeignKey('buyer.Buyer', on_delete=models.CASCADE)
+    total_spent_sum = MoneyField(max_digits=9, decimal_places=2, null=True, default_currency='USD')
+    total_car_count = models.PositiveIntegerField(default=0, verbose_name='Total count of sold cars')
+
+    def __str__(self):
+        return f"{self.buyer_stat} spend {self.total_spent_sum} and bought {self.total_car_count} cars."

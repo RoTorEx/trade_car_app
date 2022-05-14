@@ -65,3 +65,14 @@ class DealershipPromo(Promotion):
 
     def __str__(self):
         return f"{self.dealership} sells the {self.car} with {self.discount}% discount!"
+
+
+class DealerStatistic(models.Model):
+    dealership_stat = models.ForeignKey('dealership.Dealership', on_delete=models.CASCADE)
+    total_spent_sum = MoneyField(max_digits=9, decimal_places=2, null=True, default_currency='USD')
+    total_revenue_sum = MoneyField(max_digits=9, decimal_places=2, null=True, default_currency='USD')
+    total_buy_car_count = models.PositiveIntegerField(default=0)
+    total_spent_car_count = models.PositiveIntegerField(default=0)
+
+    def __str__(self):
+        return f"{self.dealership_stat} made {self.total_revenue_sum} $ and spent {self.total_spent_sum} $."

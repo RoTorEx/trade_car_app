@@ -1,9 +1,9 @@
 from django.contrib import admin
-from supplier.models import Supplier, SupplierGarage, SupplierPromo
+from supplier.models import Supplier, SupplierGarage, SupplierPromo, SupplierStatistic
 
 
 # Tuple of current application models
-models = (Supplier, SupplierGarage, SupplierPromo)
+models = (Supplier, SupplierGarage, SupplierPromo, SupplierStatistic)
 
 # Registration of models
 for m in models:

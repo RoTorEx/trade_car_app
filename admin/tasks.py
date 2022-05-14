@@ -1,12 +1,15 @@
+from django.db.models import Sum
+
+from supplier.models import SupplierGarage, SupplierPromo, SupplierStatistic
+from buyer.models import Buyer, BuyerHistory, BuyerOffer, BuyerStatistic
+from core.management.commands.fill_db import create_characters
+from admin.celery import app
+from dealership.models import (Dealership, DealershipGarage, DealershipBuyHistory,
+                               DealershipSaleHistory, DealershipPromo, DealerStatistic)
+
 from time import sleep
 from decimal import Decimal
 import random as r
-
-from admin.celery import app
-from dealership.models import Dealership, DealershipGarage, DealershipBuyHistory, DealershipSaleHistory, DealershipPromo
-from supplier.models import SupplierGarage, SupplierPromo
-from buyer.models import Buyer, BuyerHistory, BuyerOffer
-from core.management.commands.fill_db import create_characters
 
 
 @app.task
@@ -23,17 +26,8 @@ def print_log(x, y):
 
 
 @app.task
-def delete_offers():
-    '''Delete buyer's offers, if they are still for a long time.'''
-    print("Cleaning up all buyer's offers.")
-    BuyerOffer.objects.all().delete()
-
-
-@app.task
 def dealership_buy_car():
     '''Random buy orders by car characteristics from a supplier.'''
-
-    print("Start 'dealership_buy_car' task.")
 
     for dealer in Dealership.objects.all():
         '''Filtering suppliers' car for dealership characters.'''
@@ -141,6 +135,37 @@ def dealership_buy_car():
                     current_car.supplier.car_count += current_count
                     current_car.supplier.save()
 
+                    '''Add statistic.'''
+                    dealer_stat = DealerStatistic.objects.filter(dealership_stat=dealer).first()
+
+                    if not dealer_stat:
+                        DealerStatistic.objects.create(
+                            dealership_stat=dealer,
+                            total_spent_sum=current_price,
+                            total_revenue_sum=0,
+                            total_buy_car_count=current_count,
+                            total_spent_car_count=0,
+                        )
+
+                    else:
+                        dealer_stat.total_spent_sum.amount += current_price
+                        dealer_stat.total_buy_car_count += current_count
+                        dealer_stat.save()
+
+                    supplier_stat = SupplierStatistic.objects.filter(supplier_stat=current_car.supplier).first()
+
+                    if not supplier_stat:
+                        SupplierStatistic.objects.create(
+                            supplier_stat=current_car.supplier,
+                            total_revenue_sum=current_price,
+                            total_supplie_car_count=current_count,
+                        )
+
+                    else:
+                        supplier_stat.total_revenue_sum.amount += current_price
+                        supplier_stat.total_supplie_car_count += current_count
+                        supplier_stat.save()
+
                 else:
                     pennies = Decimal(str(r.uniform(100_000, 800_000))).quantize(Decimal('1.00'))
                     print(f"{dealer} don't have enouth money to buy [{current_count}] {current_car}")
@@ -166,8 +191,6 @@ def dealership_buy_car():
 @app.task
 def create_buyer_offer(offers_num):
     '''Create random buyer's offers.'''
-
-    print(f"Start 'create_buyer_offer' task with {offers_num} offers.")
 
     for _ in range(offers_num):  # Create {offers_num} random buyer's offers
         '''Random buyer make offer to buy a car from dealership.'''
@@ -205,8 +228,6 @@ def create_buyer_offer(offers_num):
 @app.task
 def check_buyers_offer():
     '''Looking for open buyer's offers.'''
-
-    print("Start 'check_buyers_offer' task")
 
     for offer in BuyerOffer.objects.exclude(active_status='close'):
         car_buyer = offer.buyer
@@ -301,3 +322,57 @@ def check_buyers_offer():
             print(f"{offer} closed success!")
             offer.active_status = 'close'
             offer.save()
+
+            '''Add statistic.'''
+            buyer_stat = BuyerStatistic.objects.filter(buyer_stat=car_buyer).first()
+
+            if not buyer_stat:
+                BuyerStatistic.objects.create(
+                    buyer_stat=car_buyer,
+                    total_spent_sum=current_price,
+                    total_car_count=1,
+                )
+
+            else:
+                buyer_stat.total_spent_sum.amount += current_price
+                buyer_stat.total_car_count += 1
+                buyer_stat.save()
+
+            dealer_stat = DealerStatistic.objects.filter(dealership_stat=current_dealer).first()
+
+            dealer_stat.total_revenue_sum.amount += current_price
+            dealer_stat.total_spent_car_count += 1
+            dealer_stat.save()
+
+
+@app.task
+def trade_statistic():
+    '''Statistic task.'''
+
+    buyer_stat = BuyerStatistic.objects.aggregate(Sum('total_spent_sum'), Sum('total_car_count'))
+    br_spent = buyer_stat['total_spent_sum__sum']
+    br_bought = buyer_stat['total_car_count__sum']
+
+    dealer_stat = DealerStatistic.objects.aggregate(Sum('total_spent_sum'), Sum('total_revenue_sum'),
+                                                    Sum('total_buy_car_count'), Sum('total_spent_car_count'))
+    dr_spent = dealer_stat['total_spent_sum__sum']
+    dr_made = dealer_stat['total_revenue_sum__sum']
+    dr_buy = dealer_stat['total_buy_car_count__sum']
+    dr_sell = dealer_stat['total_spent_car_count__sum']
+
+    supplier_stat = SupplierStatistic.objects.aggregate(Sum('total_revenue_sum'), Sum('total_supplie_car_count'))
+    sp_revenue = supplier_stat['total_revenue_sum__sum']
+    sp_deliver = supplier_stat['total_supplie_car_count__sum']
+
+    print("===< Statistics for the working period >===")
+
+    print(f"Buyers spent {br_spent}$ to buying {br_bought} cars.")
+
+    print(f"Dealerships spent {dr_spent}$ to buying {dr_buy} cars. And made {dr_made}$ selling {dr_sell} cars.")
+
+    if dr_made and dr_spent:
+        print(f"Profit of car dealerships without taxes - {dr_made - dr_spent}$")
+
+    print(f"Suppliers made {sp_revenue}$ Delivered {sp_deliver} cars.")
+
+    print("===< ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ >===")
