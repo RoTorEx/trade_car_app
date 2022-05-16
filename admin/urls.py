@@ -55,11 +55,13 @@ for addr in addresses:
     # print(router.urls)  # Marker
 
 urlpatterns = [
+    # No APIs
     path('admin/', admin.site.urls),
-    path('api/', include(router.urls)),
-    path('auth/', include('user.urls')),
-
     path('', include('core.urls')),
+
+    # APIs
+    path('api/', include(router.urls)),
+    path('', include('user.urls')),
 ]
 
 urlpatterns += doc_urls  # Add Swagger

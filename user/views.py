@@ -13,10 +13,8 @@ from django.urls import reverse
 from django.core.mail import send_mail
 from django.conf import settings
 
-# from admin.settings import SECRET_KEY
 from user.models import UserProfile
-from user.serializers import UserProfileSerializer, RegisterSerializer, EmailVerificationSerializer
-from user.utils import Util
+from user.serializers import UserProfileSerializer, RegisterSerializer, EmailVerificationSerializer, LoginSerializer
 from core.service import UserProfileFilter
 
 import jwt
@@ -62,8 +60,7 @@ class RegisterView(generics.GenericAPIView):
         email_body = f"Hi, {user.username}! Use link below to verify your email." + '\n' + absurl
         data = {'email_subject': 'Verify your email', 'email_body': email_body, 'to_email': user.email}
 
-        # Util.send_email(data)
-
+        # Django method to send email
         send_mail(
             data['email_subject'],
             data['email_body'],
@@ -102,3 +99,13 @@ class VerifyEmail(views.APIView):
 
         except jwt.exceptions.DecodeError:
             return Response({'error': "Invalid token."}, status=status.HTTP_400_BAD_REQUEST)
+
+
+class LoginAPIView(generics.GenericAPIView):
+    serializer_class = LoginSerializer
+
+    def post(self, request):
+        serializer = self.serializer_class(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        return Response(serializer.data, status=status.HTTP_200_OK)
