@@ -32,7 +32,7 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
         },
     )
 
-    role = models.CharField(max_length=15, choices=UserRoles.choices(), blank=True)
+    role = models.CharField(default='unknown', max_length=15, choices=UserRoles.choices(), blank=True)
 
     email = models.EmailField(_("email address"), blank=False)
 
