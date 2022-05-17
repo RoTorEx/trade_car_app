@@ -8,14 +8,21 @@ from rest_framework import status
 from django_filters.rest_framework import DjangoFilterBackend
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
+from django.utils.encoding import force_str, smart_str, smart_bytes, DjangoUnicodeDecodeError
+from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
+from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from django.contrib.sites.shortcuts import get_current_site
 from django.urls import reverse
 from django.core.mail import send_mail
 from django.conf import settings
 
-from user.models import UserProfile
-from user.serializers import UserProfileSerializer, RegisterSerializer, EmailVerificationSerializer, LoginSerializer
 from core.service import UserProfileFilter
+from user.models import UserProfile
+from user.serializers import (UserProfileSerializer,
+                              RegisterSerializer,
+                              EmailVerificationSerializer,
+                              LoginSerializer,
+                              RequestPasswordResetSerializer)
 
 import jwt
 
@@ -50,14 +57,14 @@ class RegisterView(generics.GenericAPIView):
 
         user_data = serializer.data
         user = UserProfile.objects.get(username=user_data['username'])
-
         token = RefreshToken.for_user(user).access_token
 
         current_site = get_current_site(request).domain
         relativeLink = reverse('email_verify')
 
         absurl = f"http://{current_site}{relativeLink}?token={str(token)}"
-        email_body = f"Hi, {user.username}! Use link below to verify your email." + '\n' + absurl
+        email_body = f"Hi, {user.username}! Use link below to verify your email:\n{absurl}"
+
         data = {'email_subject': 'Verify your email', 'email_body': email_body, 'to_email': user.email}
 
         # Django method to send email
@@ -109,3 +116,48 @@ class LoginAPIView(generics.GenericAPIView):
         serializer.is_valid(raise_exception=True)
 
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class RequestPasswordReset(generics.GenericAPIView):
+    serializer_class = RequestPasswordResetSerializer
+
+    def post(self, request):
+        serializer = self.serializer_class(data=request.data)
+
+        username = request.data['username']
+
+        if UserProfile.objects.filter(username=username).exists():
+            user = UserProfile.objects.get(username=username)
+
+            if user.verifyed_email:
+                uidb64 = urlsafe_base64_encode(smart_bytes(user.id))
+                token = PasswordResetTokenGenerator().make_token(user)
+
+                current_site = get_current_site(request=request).domain
+                relativeLink = reverse('password_reset_confirm', kwargs={'uidb64': uidb64, 'token': token})
+
+                absurl = f"http://{current_site}{relativeLink}"
+                email_body = f"Hello!\nUse link below to reset you password:\n{absurl}\n\n\n"
+                email_body += "If you didn't request a reset then ignore this message."
+
+                data = {'email_subject': 'Reset you password', 'email_body': email_body, 'to_email': user.email}
+
+                # Django method to send email
+                send_mail(
+                    data['email_subject'],
+                    data['email_body'],
+                    "django.trade.app@gmail.com",
+                    [data['to_email']],
+                    fail_silently=False,
+                )
+
+                return Response({'success': "We have sent you a link to reset password."}, status=status.HTTP_200_OK)
+
+            return Response({'error': 'Your email is not verify!'}, status=status.HTTP_403_FORBIDDEN)
+
+        return Response({'error': 'Invalid username.'}, status=status.HTTP_400_BAD_REQUEST)
+
+
+class PasswordTokenCkeckAPI(generics.GenericAPIView):
+    def get(self, request, uidb64, token):
+        pass

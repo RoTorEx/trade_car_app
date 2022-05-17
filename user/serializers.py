@@ -1,6 +1,9 @@
 from rest_framework import serializers
 from rest_framework.exceptions import AuthenticationFailed
 from django.contrib import auth
+from django.contrib.sites.shortcuts import get_current_site
+from django.core.mail import send_mail
+from django.urls import reverse
 
 from user.models import UserProfile
 
@@ -64,3 +67,10 @@ class LoginSerializer(serializers.ModelSerializer):
             raise AuthenticationFailed("Account is disable.")
 
         return {'username': user.username, 'email': user.email, 'tokens': user.tokens()}
+
+
+class RequestPasswordResetSerializer(serializers.Serializer):
+    username = serializers.CharField(min_length=1)
+
+    class Meta:
+        fields = ['username']
