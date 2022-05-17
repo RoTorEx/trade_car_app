@@ -18,6 +18,9 @@ django-filter = "*"
 celery = "*"
 flower = "*"
 redis = "*"
+pytest = "*"
+pytest-django = "*"
+pytest-cov = "*"
 
 [dev-packages]
 

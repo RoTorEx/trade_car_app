@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 
 from datetime import timedelta
 from pathlib import Path
+import sys
 import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -27,6 +28,8 @@ SECRET_KEY = os.environ.get("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = int(os.environ.get("DEBUG", default=0))
 # DEBUG = False
+TESTING_MODE = 'test' in sys.argv
+DEV_MODE = DEBUG and not TESTING_MODE
 
 # ALLOWED_HOSTS = ['0.0.0.0', '127.0.0.1']
 ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS").split(" ")
@@ -180,7 +183,8 @@ REST_FRAMEWORK = {
     ),
 
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
-    "PAGE_SIZE": 20
+    "PAGE_SIZE": 20,
+    'TEST_REQUEST_DEFAULT_FORMAT': 'json',
 }
 
 SWAGGER_SETTINGS = {

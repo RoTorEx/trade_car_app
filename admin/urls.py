@@ -55,7 +55,7 @@ for addr in addresses:
 urlpatterns = [
     # No APIs
     path('admin/', admin.site.urls),
-    path('', include('core.urls')),
+    path('', include('core.urls'), name='homepage-url'),
 
     # APIs
     path('api/', include(router.urls)),
@@ -65,7 +65,7 @@ urlpatterns = [
 urlpatterns += doc_urls  # Add Swagger
 
 # Debug toolbar
-if settings.DEBUG:
+if settings.DEBUG or not settings.TESTING_MODE:
     import debug_toolbar
 
     urlpatterns = [
