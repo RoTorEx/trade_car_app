@@ -26,7 +26,7 @@ class RegisterSerializer(serializers.ModelSerializer):
 
     def validate(self, attrs):
         username = attrs.get('username', '')
-        email = attrs.get('email', '')
+        # email = attrs.get('email', '')
 
         if not username.isalnum():
             raise serializers.ValidationError("The username must only contain alphanumeric symbols.")
@@ -77,12 +77,9 @@ class RequestPasswordResetSerializer(serializers.Serializer):
 
 
 class SetNewPasswordSerializer(serializers.Serializer):
-    password = serializers.CharField(
-        min_length=4, max_length=68, write_only=True)
-    token = serializers.CharField(
-        min_length=1, write_only=True)
-    uidb64 = serializers.CharField(
-        min_length=1, write_only=True)
+    password = serializers.CharField(min_length=4, max_length=68, write_only=True)
+    token = serializers.CharField(min_length=1, write_only=True)
+    uidb64 = serializers.CharField(min_length=1, write_only=True)
 
     class Meta:
         fields = ['password', 'token', 'uidb64']
@@ -95,6 +92,7 @@ class SetNewPasswordSerializer(serializers.Serializer):
 
             id = force_str(urlsafe_base64_decode(uidb64))
             user = UserProfile.objects.get(id=id)
+
             if not PasswordResetTokenGenerator().check_token(user, token):
                 raise AuthenticationFailed('The reset link is invalid', 401)
 
@@ -105,3 +103,59 @@ class SetNewPasswordSerializer(serializers.Serializer):
 
         except Exception:
             raise AuthenticationFailed('The reset link is invalid', 401)
+
+
+class ChangeUsernameSerializer(serializers.Serializer):
+    username = serializers.CharField(min_length=4, max_length=68)
+    password = serializers.CharField(min_length=4, max_length=68, write_only=True)
+    new_username = serializers.CharField(min_length=4, max_length=68)
+
+    class Meta:
+        fields = ['username', 'password', 'new_username']
+
+    def validate(self, attrs):
+        try:
+            username = attrs.get('username', '')
+            password = attrs.get('password', '')
+            new_username = attrs.get('new_username', '')
+            user = auth.authenticate(username=username, password=password)
+
+            if user.verifyed_email:
+                user.username = new_username
+                user.save()
+
+            else:
+                raise AuthenticationFailed('Your email is not confirmed!', 401)
+
+            return user
+
+        except AttributeError:
+            raise AttributeError('Invalid credentials, maybe try again?', 401)
+
+
+class ChangeEmailSerializer(serializers.Serializer):
+    username = serializers.CharField(min_length=4, max_length=68)
+    password = serializers.CharField(min_length=4, max_length=68, write_only=True)
+    new_email = serializers.CharField(min_length=4, max_length=68)
+
+    class Meta:
+        fields = ['username', 'password', 'new_email']
+
+    def validate(self, attrs):
+        try:
+            username = attrs.get('username', '')
+            password = attrs.get('password', '')
+            new_email = attrs.get('new_email', '')
+            user = auth.authenticate(username=username, password=password)
+
+            if user.verifyed_email:
+                user.email = new_email
+                user.save()
+
+            else:
+                raise AuthenticationFailed('Your email is not confirmed!', 401)
+
+            return user
+
+        except AttributeError:
+            raise AttributeError('Invalid credentials, maybe try again?', 401)
