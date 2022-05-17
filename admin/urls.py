@@ -18,7 +18,6 @@ from django.contrib import admin
 from django.urls import include, path, re_path
 from django.conf import settings
 from rest_framework import routers
-from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView, TokenVerifyView
 
 from admin.swagger import urlpatterns as doc_urls
 from user.views import UserProfileViewSet
@@ -52,7 +51,6 @@ addresses = (
 router = routers.DefaultRouter()  # List of routers at http://.../api
 for addr in addresses:
     router.register(addr[0], addr[1], basename=addr[2])
-    # print(router.urls)  # Marker
 
 urlpatterns = [
     # No APIs
@@ -61,7 +59,7 @@ urlpatterns = [
 
     # APIs
     path('api/', include(router.urls)),
-    path('', include('user.urls')),
+    path('auth/', include('user.urls')),
 ]
 
 urlpatterns += doc_urls  # Add Swagger
