@@ -5,6 +5,7 @@ from rest_framework import filters
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework import status
+from rest_framework.decorators import action
 from django_filters.rest_framework import DjangoFilterBackend
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
@@ -43,6 +44,15 @@ class UserProfileViewSet(mixins.ListModelMixin,
     def perform_create(self, serializer):
         user = self.request.user
         serializer.save(user=user)
+
+    @action(detail=False, methods=['get'])
+    def me(self, request):
+        self.kwargs['pk'] = request.user.pk
+
+        if request.method == 'GET':
+            return self.retrieve(request)
+        else:
+            raise Exception('Not implemented')
 
 
 class RegisterView(generics.GenericAPIView):

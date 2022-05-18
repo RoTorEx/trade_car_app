@@ -1,16 +1,14 @@
 from core.enums import UserRoles
 
 import pytest
+import random as r
 
 
 pytestmark = pytest.mark.django_db
 
 
-def test():
-    assert 2 + 2 == 4
-
-
-def test_user_model(user):
+def test_user_model(users):
+    user = r.choice(users)
     assert user._meta.get_field('username').max_length == 150
     assert user._meta.get_field('username').unique is True
     assert user._meta.get_field('role').choices == UserRoles.choices()
