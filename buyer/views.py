@@ -33,7 +33,7 @@ class BuyerViewSet(mixins.ListModelMixin,
     permission_classes = (IsAuthenticated, )
 
 
-class BuyerOfferViewSet(viewsets.ReadOnlyModelViewSet):
+class BuyerOfferViewSet(viewsets.ModelViewSet):
     '''Viewset of buyer car offer. ReadOnlyModelViewSet only allows data to be read.'''
     queryset = BuyerOffer.objects.all()
     serializer_class = BuyerOfferSerializer

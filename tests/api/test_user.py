@@ -41,10 +41,19 @@ def test_user_me(users):
     client = APIClient()
     user = r.choice(users)
 
+    response = client.get("http://localhost/api/user/me/")
+
+    assert response.status_code == status.HTTP_401_UNAUTHORIZED
+
     client.force_authenticate(user=user)
     response = client.get("http://localhost/api/user/me/")
-    data = response.data
 
     assert response.status_code == status.HTTP_200_OK
-    assert data['username'] == user.username
-    assert data['id'] == user.id
+    assert response.data['username'] == user.username
+    assert response.data['id'] == user.id
+
+    client.force_authenticate(user=user)
+    response = client.get("http://localhost/api/user/")
+
+    assert response.status_code == status.HTTP_200_OK
+    assert response.data['count'] == 5

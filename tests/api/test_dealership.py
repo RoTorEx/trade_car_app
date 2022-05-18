@@ -9,23 +9,23 @@ import random as r
 pytestmark = pytest.mark.django_db
 
 
-def test_buyer_list(client, buyers, superuser):
+def test_dealership_list(client, dealerships, superuser):
     client = APIClient()
-    buyer = r.choice(buyers)
+    dealership = r.choice(dealerships)
 
-    response = client.get("http://localhost/api/buyer/")
+    response = client.get("http://localhost/api/dealership/")
 
     assert response.status_code == status.HTTP_401_UNAUTHORIZED
 
-    client.force_authenticate(user=buyer.user)
-    response = client.get("http://localhost/api/buyer/")
+    client.force_authenticate(user=dealership.user)
+    response = client.get("http://localhost/api/dealership/")
 
     assert response.status_code == status.HTTP_200_OK
     assert response.data['count'] == 1
 
     admin = UserProfile.objects.filter(username='admin').get()
     client.force_authenticate(user=admin)
-    response = client.get("http://localhost/api/buyer/")
+    response = client.get("http://localhost/api/dealership/")
 
     assert response.status_code == status.HTTP_200_OK
-    assert response.data['count'] == 5
+    assert response.data['count'] == 8

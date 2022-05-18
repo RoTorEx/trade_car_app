@@ -39,7 +39,7 @@ class UserProfileViewSet(mixins.ListModelMixin,
     ordering_fields = ('username', 'role', 'email', 'verifyed_email', 'is_superuser')
     filterset_class = UserProfileFilter
 
-    # permission_classes = [IsAuthenticated]
+    permission_classes = (IsAuthenticated, )
 
     def perform_create(self, serializer):
         user = self.request.user

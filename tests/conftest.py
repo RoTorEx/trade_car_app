@@ -17,12 +17,7 @@ import datetime
 pytestmark = pytest.mark.django_db
 
 
-@pytest.fixture
-def api_client():
-    return APIClient
-
-
-def usr(usr_role, name):
+def usr(name, usr_role):
     UserProfile.objects.create(
         username=name,
         email=Faker().email(),
@@ -33,12 +28,26 @@ def usr(usr_role, name):
 
 
 @pytest.fixture
+def api_client():
+    return APIClient
+
+
+@pytest.fixture
+def superuser():
+    superuser = UserProfile.objects.create_superuser('admin', 'admin@example.com', 'admin')
+
+    return superuser
+
+
+@pytest.fixture
 def users():
-    for user in ['user_buyer', 'user_dealership', 'user_supplier']:
+
+    for postfix in ['One', 'Two', 'Three', 'Four', 'Five']:
+
         UserProfile.objects.create(
-            username=user,
+            username=f"User{postfix}",
             password='9ol8ik7uj',
-            email=f"{user}_@example.com",
+            email=f"{postfix}_@example.com",
             role='unknown',
             verifyed_email=True,
         )
@@ -50,8 +59,10 @@ def users():
 
 @pytest.fixture
 def cars():
+
     for _ in range(10):
         car = r.choice(list(brand_model.keys()))
+
         Car.objects.create(
             car_brand=car,
             car_model=r.choice(brand_model[car]),
@@ -67,36 +78,54 @@ def cars():
 
 
 @pytest.fixture
-def buyer(users):
-    buyer = Buyer.objects.create(
-        user=users[0],
-        first_name=Faker().first_name(),
-        last_name=Faker().last_name(),
-        balance=122_333.88,
-    )
+def buyers():
 
-    return buyer
+    for i in range(5):
+        usr(f'UserBuyer{i}', 'buyer')
 
+        Buyer.objects.create(
+            user=UserProfile.objects.get(username=f'UserBuyer{i}'),
+            first_name=Faker().first_name(),
+            last_name=Faker().last_name(),
+            balance=122_333.88,
+        )
 
-@pytest.fixture
-def dealership(users):
-    dealership = Dealership.objects.create(
-        user=users[1],
-        name='MotorLand',
-        location=r.choice(list(countries_data.COUNTRIES.keys())),
-        balance=10_384_014.88,
-    )
+    buyers = Buyer.objects.all()
 
-    return dealership
+    return buyers
 
 
 @pytest.fixture
-def supplier(users):
-    supplier = Supplier.objects.create(
-        user=users[1],
-        name='Lupa & Pupa Inc.',
-        year_of_foundation=datetime.date(r.randint(1900, 2022), r.randint(1, 12), r.randint(1, 28)),
-        car_count=125,
-    )
+def dealerships():
 
-    return supplier
+    for i in range(8):
+        usr(f'UserDealership{i}', 'dealership')
+
+        Dealership.objects.create(
+            user=UserProfile.objects.get(username=f'UserDealership{i}'),
+            name='MotorLand',
+            location=r.choice(list(countries_data.COUNTRIES.keys())),
+            balance=10_384_014.88,
+        )
+
+    dealerships = Dealership.objects.all()
+
+    return dealerships
+
+
+@pytest.fixture
+def suppliers():
+
+    for i in range(3):
+        usr(f'UserSupplier{i}', 'supplier')
+
+        Supplier.objects.create(
+            user=UserProfile.objects.get(username=f'UserSupplier{i}'),
+            name='Lupa & Pupa Inc.',
+            year_of_foundation=datetime.date(r.randint(1900, 2022), r.randint(1, 12), r.randint(1, 28)),
+            car_count=125,
+        )
+
+    suppliers = Supplier.objects.all()
+
+    return suppliers
