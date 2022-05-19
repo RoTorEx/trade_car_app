@@ -9,7 +9,8 @@ import random as r
 pytestmark = pytest.mark.django_db
 
 
-def test_dealership_list(client, dealerships, superuser):
+@pytest.mark.dealership
+def test_dealership_list(dealerships, superuser):
     client = APIClient()
     dealership = r.choice(dealerships)
 
@@ -29,3 +30,24 @@ def test_dealership_list(client, dealerships, superuser):
 
     assert response.status_code == status.HTTP_200_OK
     assert response.data['count'] == 8
+
+
+@pytest.mark.dealership
+def test_dealership_id(dealerships, superuser):
+    client = APIClient()
+    dealership = r.choice(dealerships)
+
+    response = client.get(f"http://localhost/api/dealership/{dealership.id}/")
+
+    assert response.status_code == status.HTTP_401_UNAUTHORIZED
+
+    client.force_authenticate(user=dealership.user)
+    response = client.get(f"http://localhost/api/dealership/{dealership.id}/")
+
+    assert response.status_code == status.HTTP_200_OK
+    assert response.data['id'] == dealership.id
+    assert response.data['user']['username'] == str(dealership.user)
+
+    response = client.post(f"http://localhost/api/dealership/{dealership.id}/")
+
+    assert response.status_code == status.HTTP_405_METHOD_NOT_ALLOWED

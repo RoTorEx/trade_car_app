@@ -2,9 +2,7 @@ from django.db import models
 from djmoney.models.fields import MoneyField
 
 from core.models import CommonAbstractModel
-
-
-offer_status = (('close', 'Closed success!'), ('open', 'Still open...'))
+from core.enums import OfferStatus
 
 
 def get_preferred_car_characters():
@@ -35,7 +33,8 @@ class BuyerOffer(CommonAbstractModel):
     buyer = models.ForeignKey('buyer.Buyer', on_delete=models.CASCADE, related_name='buyer', verbose_name='Buyer')
     max_price = MoneyField(max_digits=9, decimal_places=2, null=True, default_currency='USD', verbose_name='Max price')
     preferred_car_characters = models.JSONField(default=get_preferred_car_characters)
-    active_status = models.CharField(default='open', max_length=63, choices=offer_status, verbose_name='Offer status')
+    active_status = models.CharField(default='open', max_length=63,
+                                     choices=OfferStatus.choices(), verbose_name='Offer status')
 
     def __str__(self):
         return f"{self.max_price}"

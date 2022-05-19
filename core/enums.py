@@ -38,3 +38,8 @@ class Color(BaseEnum):
     gold = 'Gold'
     silver = 'Silver'
     black = 'Black'
+
+
+class OfferStatus(BaseEnum):
+    close = 'Closed success!'
+    open = 'Still open...'

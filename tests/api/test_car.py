@@ -8,6 +8,7 @@ import random as r
 pytestmark = pytest.mark.django_db
 
 
+@pytest.mark.car
 def test_create_car(client):
     payload = dict(
         car_brand='Honda',
@@ -26,6 +27,7 @@ def test_create_car(client):
     assert payload['car_model'] == response.data['car_model']
 
 
+@pytest.mark.car
 def test_car_list(client, cars):
     response = client.get("http://localhost/api/car/")
 
@@ -33,6 +35,7 @@ def test_car_list(client, cars):
     assert response.data['count'] == 10
 
 
+@pytest.mark.car
 def test_car_characters(client, cars):
     car = r.choice(cars)
     response = client.get(f"http://localhost/api/car/{car.id}/")
@@ -46,6 +49,7 @@ def test_car_characters(client, cars):
     assert car.description == response.data['description']
 
 
+@pytest.mark.car
 def test_car_put(client, cars):  # !Change
     car = r.choice(cars)
     payload = dict(
@@ -63,6 +67,7 @@ def test_car_put(client, cars):  # !Change
     assert response.status_code == status.HTTP_415_UNSUPPORTED_MEDIA_TYPE
 
 
+@pytest.mark.car
 def test_car_delete(client, cars):
     car = r.choice(cars)
     response = client.delete(f"http://localhost/api/car/{car.id}/")

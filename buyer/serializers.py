@@ -23,6 +23,8 @@ class BuyerSerializer(serializers.ModelSerializer):
 
 class BuyerOfferSerializer(serializers.ModelSerializer):
     '''Buyer offer serializer.'''
+    preferred_car_characters = serializers.JSONField(required=False, initial=dict)
+
     class Meta:
         model = BuyerOffer
         fields = '__all__'

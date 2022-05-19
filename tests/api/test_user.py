@@ -1,8 +1,6 @@
-from rest_framework.test import force_authenticate, APITestCase, APIRequestFactory, URLPatternsTestCase
-from rest_framework.test import APIClient
 from rest_framework import status
-from django.test import TestCase
-from django.urls import reverse, include, path
+from rest_framework.test import APIClient
+from django.urls import reverse
 
 from user.models import UserProfile
 
@@ -12,14 +10,8 @@ import random as r
 pytestmark = pytest.mark.django_db
 
 
-# def test_example(user):
-#     factory = APIRequestFactory()
-#     user = UserProfile.objects.get(username=user)
-#     request = factory.get('api/user/me')
-#     print(force_authenticate(request, user=user))
-
-
-def test_create_user(client):
+@pytest.mark.user
+def test_register_user(client):
     url = reverse('register')
     data = {
         'email': 'aleks_strel_8v@mail.ru',
@@ -37,6 +29,23 @@ def test_create_user(client):
     assert UserProfile.objects.get().username == 'neon'
 
 
+@pytest.mark.user
+def test_login_user(client, superuser):
+    url = reverse('login')
+    data = {
+        'username': 'admin',
+        'password': 'admin',
+    }
+    response = client.post(url, data)
+
+    assert response.status_code == status.HTTP_200_OK
+    assert response.data['username'] == data['username']
+    assert 'access' in response.data['tokens']
+    assert 'refresh' in response.data['tokens']
+    assert 'password' not in response.data
+
+
+@pytest.mark.user
 def test_user_me(users):
     client = APIClient()
     user = r.choice(users)
