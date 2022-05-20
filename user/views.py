@@ -13,8 +13,6 @@ from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from django.contrib.sites.shortcuts import get_current_site
 from django.urls import reverse
-from django.core.mail import send_mail
-from django.conf import settings
 
 from core.service import UserProfileFilter
 from user.models import UserProfile
@@ -26,8 +24,7 @@ from user.serializers import (UserProfileSerializer,
                               SetNewPasswordSerializer,
                               ChangeUsernameSerializer,
                               ChangeEmailSerializer)
-
-import jwt
+from user.utils import send_mail_to_user, verify_user_email
 
 
 class UserProfileViewSet(mixins.ListModelMixin,
@@ -70,14 +67,7 @@ class RegisterView(generics.GenericAPIView):
 
         data = {'email_subject': 'Verify your email', 'email_body': email_body, 'to_email': user.email}
 
-        # Django method to send email
-        send_mail(
-            data['email_subject'],
-            data['email_body'],
-            "django.trade.app@gmail.com",
-            [data['to_email']],
-            fail_silently=False,
-        )
+        send_mail_to_user(data)  # Send an email to new user
 
         return Response(user_data, status=status.HTTP_201_CREATED)
 
@@ -94,21 +84,7 @@ class VerifyEmail(views.APIView):
     def get(self, request):
         token = request.GET.get('token')
 
-        try:
-            payload = jwt.decode(token, settings.SECRET_KEY, algorithms=['HS256'])
-            user = UserProfile.objects.get(id=payload['user_id'])
-
-            if not user.verifyed_email:
-                user.verifyed_email = True
-                user.save()
-
-            return Response({'email': "Email success confirmed!"}, status=status.HTTP_200_OK)
-
-        except jwt.ExpiredSignatureError:
-            return Response({'error': "Activation Expired."}, status=status.HTTP_400_BAD_REQUEST)
-
-        except jwt.exceptions.DecodeError:
-            return Response({'error': "Invalid token."}, status=status.HTTP_400_BAD_REQUEST)
+        return verify_user_email(token)  # Try to verify user email
 
 
 class LoginAPIView(generics.GenericAPIView):
@@ -145,14 +121,7 @@ class RequestPasswordReset(generics.GenericAPIView):
 
                 data = {'email_subject': 'Reset you password', 'email_body': email_body, 'to_email': user.email}
 
-                # Django method to send email
-                send_mail(
-                    data['email_subject'],
-                    data['email_body'],
-                    "django.trade.app@gmail.com",
-                    [data['to_email']],
-                    fail_silently=False,
-                )
+                send_mail_to_user(data)  # Send an email to new user
 
                 return Response({'success': "We have sent you a link to reset password."}, status=status.HTTP_200_OK)
 
