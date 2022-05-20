@@ -74,6 +74,8 @@ services:
 
   nginx:
     build: ./nginx
+    volumes:
+      - static_volume:/trade_car_app/static/
     ports:
       - 1337:80
     depends_on:
