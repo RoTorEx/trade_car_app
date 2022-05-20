@@ -50,7 +50,7 @@ def test_car_characters(client, cars):
 
 
 @pytest.mark.car
-def test_car_put(client, cars):  # !Change
+def test_car_put(client, cars):
     car = r.choice(cars)
     payload = dict(
         car_brand='Honda',
@@ -62,9 +62,12 @@ def test_car_put(client, cars):  # !Change
         is_active=True,
     )
 
-    response = client.put(f"http://localhost/api/car/{car.id}/", payload)
+    response = client.put(f"http://localhost/api/car/{car.id}/", payload, content_type='application/json')
 
-    assert response.status_code == status.HTTP_415_UNSUPPORTED_MEDIA_TYPE
+    assert response.status_code == status.HTTP_200_OK
+    assert response.data['id'] == car.id
+    assert response.data['car_brand'] == payload['car_brand']
+    assert (response.data['description'] == payload['description']) != car.description
 
 
 @pytest.mark.car
