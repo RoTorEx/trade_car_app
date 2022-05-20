@@ -1,0 +1,20 @@
+FROM python:3.10-alpine
+
+WORKDIR /trade_car_app
+
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
+
+RUN apk update \
+    && apk add postgresql-dev gcc python3-dev musl-dev
+
+COPY . /trade_car_app
+COPY Pipfile ./
+COPY Pipfile.lock ./
+
+RUN pip3 install pipenv
+RUN pipenv install --deploy --system
+
+RUN chmod +x ./entrypoint.prod.sh
+
+ENTRYPOINT ["./entrypoint.prod.sh"]

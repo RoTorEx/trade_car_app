@@ -19,6 +19,8 @@ django-filter = "*"
 celery = "*"
 flower = "*"
 redis = "*"
+gunicorn = "*"
+flake8 = "*"
 
 [dev-packages]
 
