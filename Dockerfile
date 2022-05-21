@@ -1,6 +1,4 @@
 # File for building the application image
-
-# Get the Python image
 FROM python:3.10-alpine
 
 # Set the working directory of the image

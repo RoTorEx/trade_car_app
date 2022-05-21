@@ -21,6 +21,8 @@ redis = "*"
 pytest = "*"
 pytest-django = "*"
 pytest-cov = "*"
+gunicorn = "*"
+flake8 = "*"
 
 [dev-packages]
 
