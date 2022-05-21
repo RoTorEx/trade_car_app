@@ -172,4 +172,4 @@ http://localhost:5555/dashboard - адрес __Celery Flower__.
 
 [Продолжение](https://django.fun/tutorials/dokerizaciya-django-s-pomoshyu-postgres-gunicorn-i-nginx/#:~:text=manage.py%20migrate-,Gunicorn,-%D0%94%D0%BB%D1%8F%20%D0%BF%D1%80%D0%BE%D0%B8%D0%B7%D0%B2%D0%BE%D0%B4%D1%81%D1%82%D0%B2%D0%B5%D0%BD%D0%BD%D1%8B%D1%85%20%D1%81%D1%80%D0%B5%D0%B4) инструкции по девопс штучкам.
 
-
+Запуск прод-приложения в контейнере командой - *docker-compose -f docker-compose.prod.yml up -d --build*.
